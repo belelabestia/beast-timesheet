@@ -1,0 +1,5 @@
+services:
+  app:
+    build: ./BeastTimesheet/
+    ports:
+      - "5258:5258"
