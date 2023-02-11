@@ -37,11 +37,38 @@ else
     </table>
 }
 
+@if (blogs == null)
+{
+    <p><em>Loading blogs...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>BlodId</th>
+                <th>Url</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var blog in blogs)
+            {
+                <tr>
+                    <td>@blog.BlogId</td>
+                    <td>@blog.Url</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 @code {
     private WeatherForecast[]? forecasts;
+    private Blog[]? blogs;
 
     protected override async Task OnInitializedAsync()
     {
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        blogs = await Http.GetFromJsonAsync<Blog[]>("WeatherForecast/Blogs");
     }
 }

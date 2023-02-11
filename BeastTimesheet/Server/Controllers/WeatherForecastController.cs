@@ -13,10 +13,12 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly BloggingContext _context;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, BloggingContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
     [HttpGet]
@@ -29,5 +31,11 @@ public class WeatherForecastController : ControllerBase
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         })
         .ToArray();
+    }
+
+    [HttpGet("Blogs")]
+    public IEnumerable<Blog> GetBlogs()
+    {
+        return _context.Blogs ?? Enumerable.Empty<Blog>();
     }
 }

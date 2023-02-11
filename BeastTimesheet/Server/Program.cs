@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddNpgsql<BloggingContext>(Config.DB_CONNECTION_STRING);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
