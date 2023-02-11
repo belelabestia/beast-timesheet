@@ -1,5 +1,6 @@
 services:
   app:
     build: ./BeastTimesheet/
+    image: beast-timesheet-app
     ports:
-      - "80:80"
+      - "127.0.0.1:5000:80"
