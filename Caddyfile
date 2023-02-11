@@ -1,3 +1,9 @@
 bts.belelabestia.it {
 	reverse_proxy 127.0.0.1:5000
+	import Auth
 }
+
+# Auth file contains actual basicauth directive
+# basicauth {
+# 	secret_username secret_password
+# }
