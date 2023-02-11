@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using static Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddNpgsql<BloggingContext>(Config.DB_CONNECTION_STRING);
+builder.Services.AddNpgsql<BloggingContext>(builder.Environment.IsDevelopment() ? LOCAL_CONNECTION_STRING : DOCKER_CONNECTION_STRING);
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
