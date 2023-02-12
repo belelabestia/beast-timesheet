@@ -13,5 +13,16 @@ await builder.Build().RunAsync();
 
 public class Auth
 {
-    public string? Key { get; set; }
+    string? _key;
+    public string? Key
+    {
+        get => _key;
+        set
+        {
+            _key = value;
+            OnChange?.Invoke();
+        }
+    }
+
+    public event Action? OnChange;
 }

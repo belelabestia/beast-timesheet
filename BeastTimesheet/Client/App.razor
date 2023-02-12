@@ -1,6 +1,4 @@
-﻿
-@using System.Net.Http.Headers
-@inject Auth auth
+﻿@inject Auth auth
 @inject HttpClient http
 
 @if (auth.Key == null)
@@ -28,6 +26,11 @@ else
 @code {
     string? input;
 
+    protected override void OnInitialized()
+    {
+        auth.OnChange += StateHasChanged;
+    }
+
     void OnInput(ChangeEventArgs eventArgs)
     {
         input = eventArgs.Value as string;
@@ -41,7 +44,7 @@ else
             http.DefaultRequestHeaders.Add("Key", input);
 
             var res = await http.GetAsync("api/Auth");
-            
+
             if (res.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 auth.Key = input;
@@ -50,3 +53,4 @@ else
         catch { }
     }
 }
+

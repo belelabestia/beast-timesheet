@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject HttpClient http
+@inject Auth auth
 
 <div class="page">
     <div class="sidebar">
@@ -8,6 +10,7 @@
     <main>
         <div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <button @onclick="Logout">Logout</button>
         </div>
 
         <article class="content px-4">
@@ -15,3 +18,11 @@
         </article>
     </main>
 </div>
+
+@code {
+    void Logout()
+    {
+        http.DefaultRequestHeaders.Remove("Key");
+        auth.Key = null;
+    }
+}
