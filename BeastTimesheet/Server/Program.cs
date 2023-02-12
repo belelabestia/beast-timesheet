@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using static Config;
 
 var builder = WebApplication.CreateBuilder(args);
+var connStr = builder.Environment.IsDevelopment() ? LOCAL_CONNECTION_STRING : DOCKER_CONNECTION_STRING;
 
-builder.Services.AddNpgsql<BloggingContext>(builder.Environment.IsDevelopment() ? LOCAL_CONNECTION_STRING : DOCKER_CONNECTION_STRING);
-
+builder.Services.AddNpgsql<BloggingContext>(connStr);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -31,9 +31,9 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<BloggingContext>();
     db.Database.Migrate();
 
-    db.Blogs.ExecuteDelete();
+    db.Blogs!.ExecuteDelete();
 
-    db.Blogs.Add(new Blog { BlogId = 1, Url = "https://test.url" });
+    db.Blogs!.Add(new Blog { BlogId = 1, Url = "https://test.url" });
     db.SaveChanges();
 }
 
