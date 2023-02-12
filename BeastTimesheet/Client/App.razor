@@ -1,4 +1,6 @@
-﻿@inject Auth auth
+﻿
+@using System.Net.Http.Headers
+@inject Auth auth
 @inject HttpClient http
 
 @if (auth.Key == null)
@@ -35,13 +37,9 @@ else
     {
         try
         {
-            var req = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                Headers = new System.Net.Http.Headers.HttpRequestHeaders
-            }
+            http.DefaultRequestHeaders.Remove("Key");
+            http.DefaultRequestHeaders.Add("Key", input);
 
-            await http.SendAsync(req)
             var res = await http.GetAsync("api/Auth");
             
             if (res.StatusCode == System.Net.HttpStatusCode.OK)
