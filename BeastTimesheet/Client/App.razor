@@ -1,12 +1,54 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿@inject Auth auth
+@inject HttpClient http
+
+@if (auth.Key == null)
+{
+    <p>Insert key</p>
+    <input @oninput="OnInput">
+    <button @onclick="OnConfirm">Confirm</button>
+}
+else
+{
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+}
+
+@code {
+    string? input;
+
+    void OnInput(ChangeEventArgs eventArgs)
+    {
+        input = eventArgs.Value as string;
+    }
+
+    async Task OnConfirm(MouseEventArgs eventArgs)
+    {
+        try
+        {
+            var req = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                Headers = new System.Net.Http.Headers.HttpRequestHeaders
+            }
+
+            await http.SendAsync(req)
+            var res = await http.GetAsync("api/Auth");
+            
+            if (res.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                auth.Key = input;
+            }
+        }
+        catch { }
+    }
+}
