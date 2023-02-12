@@ -28,7 +28,7 @@ app.Use(async (context, next) =>
     var storedAuthKey = app.Configuration.GetValue<string>("Auth:Key");
     var givenAuthKey = context.Request.Headers["Key"];
 
-    if (context.Request.Path.StartsWithSegments("/api/") && givenAuthKey != storedAuthKey)
+    if (context.Request.Path.StartsWithSegments("/api") && givenAuthKey != storedAuthKey)
     {
         context.Response.StatusCode = 401;
         await context.Response.WriteAsync("Wrong auth key.");
