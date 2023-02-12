@@ -4,7 +4,7 @@
 @if (auth.Key == null)
 {
     <p>Insert key</p>
-    <input @oninput="OnInput">
+    <input @bind="input">
     <button @onclick="OnConfirm">Confirm</button>
 }
 else
@@ -31,11 +31,6 @@ else
         auth.OnChange += StateHasChanged;
     }
 
-    void OnInput(ChangeEventArgs eventArgs)
-    {
-        input = eventArgs.Value as string;
-    }
-
     async Task OnConfirm(MouseEventArgs eventArgs)
     {
         try
@@ -48,6 +43,7 @@ else
             if (res.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 auth.Key = input;
+                input = null;
             }
         }
         catch { }
