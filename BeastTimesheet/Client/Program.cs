@@ -7,5 +7,11 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddSingleton<Auth>();
 
 await builder.Build().RunAsync();
+
+public class Auth
+{
+    public string? Key { get; set; }
+}
