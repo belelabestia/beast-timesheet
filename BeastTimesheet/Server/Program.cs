@@ -48,8 +48,8 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<BeastTimesheetContext>();
 
     db.Database.Migrate();
-    db.Blogs!.ExecuteDelete();
-    db.Blogs!.Add(new Blog { BlogId = 1, Url = "https://test.url" });
+    db.Projects!.ExecuteDelete();
+    db.Projects!.Add(new Project { Id = 1, Name = "Test project", HourlyFee = 25 });
     db.SaveChanges();
 }
 
