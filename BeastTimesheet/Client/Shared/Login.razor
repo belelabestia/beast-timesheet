@@ -1,0 +1,26 @@
+@using System.Net
+@inject HttpClient http
+@inject Auth auth
+
+<h1>Login</h1>
+<p>Insert key</p>
+<input @bind="input">
+<button @onclick="OnConfirm">Confirm</button>
+
+@code {
+    string? input;
+
+    async Task OnConfirm(MouseEventArgs eventArgs)
+    {
+        http.DefaultRequestHeaders.Remove("Key");
+        http.DefaultRequestHeaders.Add("Key", input);
+
+        var res = await http.GetAsync("api/Auth");
+
+        if (res.StatusCode == HttpStatusCode.OK)
+        {
+            auth.Key = input;
+            input = null;
+        }
+    }
+}
