@@ -2,25 +2,42 @@
 @inject HttpClient http
 @inject Auth auth
 
-<h1>Login</h1>
-<p>Insert key</p>
-<input @bind="input">
-<button @onclick="OnConfirm">Confirm</button>
+<div class="grid center">
+    <div>
+        <h1>Login</h1>
+        <p>Insert key</p>
+        <input type="password" @bind="input" @bind:event="oninput" @onkeypress="OnKey">
+        <button @onclick="OnConfirm">Confirm</button>
+        <p class="error" style="visibility: @errorVisibility">Login failed!</p>
+    </div>
+</div>
 
 @code {
     string? input;
+    string errorVisibility = "hidden";
 
-    async Task OnConfirm(MouseEventArgs eventArgs)
+    async Task OnConfirm()
     {
         http.DefaultRequestHeaders.Remove("Key");
         http.DefaultRequestHeaders.Add("Key", input);
 
         var res = await http.GetAsync("api/Auth");
 
-        if (res.StatusCode == HttpStatusCode.OK)
+        if (res.StatusCode is not HttpStatusCode.OK)
         {
-            auth.Key = input;
-            input = null;
+            errorVisibility = "visible";
+            return;
+        }
+
+        auth.Key = input;
+        input = null;
+    }
+
+    async Task OnKey(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Key is "Enter")
+        {
+            await OnConfirm();
         }
     }
 }

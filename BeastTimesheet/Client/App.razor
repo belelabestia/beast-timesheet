@@ -1,12 +1,8 @@
-﻿@using System.Net
-@inject Auth auth
-@inject HttpClient http
+﻿@inject Auth auth
 
 @if (auth.Key == null)
 {
-    <p>Insert key</p>
-    <input @bind="input">
-    <button @onclick="OnConfirm">Confirm</button>
+    <Login />
 }
 else
 {
@@ -30,24 +26,6 @@ else
     protected override void OnInitialized()
     {
         auth.OnChange += StateHasChanged;
-    }
-
-    async Task OnConfirm(MouseEventArgs eventArgs)
-    {
-        try
-        {
-            http.DefaultRequestHeaders.Remove("Key");
-            http.DefaultRequestHeaders.Add("Key", input);
-
-            var res = await http.GetAsync("api/Auth");
-
-            if (res.StatusCode == HttpStatusCode.OK)
-            {
-                auth.Key = input;
-                input = null;
-            }
-        }
-        catch { }
     }
 }
 
