@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BeastTimesheet.Server.Migrations
 {
-    [DbContext(typeof(BloggingContext))]
+    [DbContext(typeof(BeastTimesheetContext))]
     [Migration("20230211154800_InitialCreate")]
     partial class InitialCreate
     {

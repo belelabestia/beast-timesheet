@@ -5,7 +5,7 @@ using static Config;
 var builder = WebApplication.CreateBuilder(args);
 var connStr = builder.Environment.IsDevelopment() ? LOCAL_CONNECTION_STRING : DOCKER_CONNECTION_STRING;
 
-builder.Services.AddNpgsql<BloggingContext>(connStr);
+builder.Services.AddNpgsql<BeastTimesheetContext>(connStr);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -45,7 +45,7 @@ app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<BloggingContext>();
+    var db = scope.ServiceProvider.GetRequiredService<BeastTimesheetContext>();
 
     db.Database.Migrate();
     db.Blogs!.ExecuteDelete();

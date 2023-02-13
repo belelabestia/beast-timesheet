@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using BeastTimesheet.Shared.Model;
 
-public class BloggingContext : DbContext
+public class BeastTimesheetContext : DbContext
 {
+    public DbSet<Project>? Projects { get; set; }
+    public DbSet<Timesheet>? Timesheets { get; set; }
+    public DbSet<Session>? Sessions { get; set; }
+    public DbSet<Bill>? Bills { get; set; }
     public DbSet<Blog>? Blogs { get; set; }
     public DbSet<Post>? Posts { get; set; }
 
-    public BloggingContext(DbContextOptions<BloggingContext> options) : base(options) { }
+    public BeastTimesheetContext(DbContextOptions<BeastTimesheetContext> options) : base(options) { }
 }

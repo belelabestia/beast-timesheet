@@ -14,9 +14,9 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
-    private readonly BloggingContext _context;
+    private readonly BeastTimesheetContext _context;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, BloggingContext context)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, BeastTimesheetContext context)
     {
         _logger = logger;
         _context = context;
