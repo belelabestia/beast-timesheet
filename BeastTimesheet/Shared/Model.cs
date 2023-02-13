@@ -1,4 +1,4 @@
-namespace BeastTimesheet.Shared.Models;
+namespace BeastTimesheet.Shared.Model;
 
 public class Project
 {

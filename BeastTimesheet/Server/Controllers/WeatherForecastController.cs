@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using BeastTimesheet.Shared;
+using BeastTimesheet.Shared.Model;
 
 namespace BeastTimesheet.Server.Controllers;
 

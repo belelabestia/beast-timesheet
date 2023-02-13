@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using BeastTimesheet.Shared.Model;
 using static Config;
 
 var builder = WebApplication.CreateBuilder(args);

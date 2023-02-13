@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using BeastTimesheet.Shared.Model;
 
 public class BloggingContext : DbContext
 {
