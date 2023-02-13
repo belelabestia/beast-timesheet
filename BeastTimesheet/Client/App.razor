@@ -1,4 +1,5 @@
-﻿@inject Auth auth
+﻿@using System.Net
+@inject Auth auth
 @inject HttpClient http
 
 @if (auth.Key == null)
@@ -40,7 +41,7 @@ else
 
             var res = await http.GetAsync("api/Auth");
 
-            if (res.StatusCode == System.Net.HttpStatusCode.OK)
+            if (res.StatusCode == HttpStatusCode.OK)
             {
                 auth.Key = input;
                 input = null;
