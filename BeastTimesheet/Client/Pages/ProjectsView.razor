@@ -1,0 +1,56 @@
+@page "/"
+@page "/projects"
+@using BeastTimesheet.Shared.Model
+@inject HttpClient http
+@inject NavigationManager nav
+
+<h1>Projects</h1>
+
+<div class="fill grid center">
+    @if (projects is null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        @if (!projects.Any())
+        {
+            <div class="grid gap">
+                <p>Nothing to show here.</p>
+                <button @onclick="Create">Create project</button>
+                <p style="visibility: @creatingVisibility">Creating...</p>
+            </div>
+        }
+        else
+        {
+            <ul>
+                @foreach (var project in projects)
+                {
+                    <li>
+                        <NavLink href="@($"projects/{project.Id}")">@project.Name</NavLink>
+                    </li>
+                }
+            </ul>
+            <button @onclick="Create">Create project</button>
+        }
+    }
+</div>
+
+@code {
+    IEnumerable<Project>? projects;
+    string creatingVisibility = "hidden";
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects");
+    }
+
+    async Task Create()
+    {
+        creatingVisibility = "visible";
+        var res = await http.PostAsJsonAsync("api/Projects", new Project());
+        var project = await res.Content.ReadFromJsonAsync<Project>();
+        nav.NavigateTo($"projects/{project!.Id}");
+    }
+}
+

@@ -1,0 +1,66 @@
+@using BeastTimesheet.Shared.Model
+@page "/projects/{id:int}"
+@inject HttpClient http
+@inject NavigationManager nav
+
+<h1>Project #@id</h1>
+
+<div class="fill grid center">
+    @if (project is null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="grid stretch gap">
+            <div class="grid">
+                <label for="name">Name</label>
+                <input id="name" @bind="project.Name">
+            </div>
+            <div class="grid">
+                <label for="hourly-fee">Hourly fee</label>
+                <input id="hourly-fee" @bind="project.HourlyFee">
+            </div>
+            <div class="grid stretch gap">
+                <button @onclick="Save">Save</button>
+                <button @onclick="Delete">Delete</button>
+                <button @onclick="Cancel">Cancel</button>
+            </div>
+            <p style="visibility: @loadingVisibility">Loading...</p>
+        </div>
+    }
+</div>
+
+@code {
+    Project? project;
+    string loadingVisibility = "hidden";
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}");
+    }
+
+    async Task Save()
+    {
+        loadingVisibility = "visible";
+        await http.PutAsJsonAsync($"api/projects/{id}", project);
+        Back();
+    }
+
+    async Task Delete()
+    {
+        loadingVisibility = "visible";
+        await http.DeleteAsync($"api/projects/{id}");
+        Back();
+    }
+
+    void Cancel()
+    {
+        Back();
+    }
+
+    void Back() => nav.NavigateTo("projects");
+}
+

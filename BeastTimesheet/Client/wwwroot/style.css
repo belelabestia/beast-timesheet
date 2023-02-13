@@ -15,6 +15,26 @@ body {
   place-items: center;
 }
 
+.grid.stretch {
+  place-items: stretch;
+}
+
+.grid.gap {
+  gap: 8px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex.column {
+  flex-direction: column;
+}
+
+.flex .fill {
+  flex: 1 0 auto;
+}
+
 .loader {
   display: grid;
   justify-items: start;
