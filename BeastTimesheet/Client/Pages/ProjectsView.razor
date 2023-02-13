@@ -27,7 +27,7 @@
                 @foreach (var project in projects)
                 {
                     <li>
-                        <NavLink href="@($"projects/{project.Id}")">@project.Name</NavLink>
+                        <NavLink href="@($"projects/{project.Id}")">@(project.Name is not "" ? project.Name : "No name - #" + project.Id)</NavLink>
                     </li>
                 }
             </ul>
