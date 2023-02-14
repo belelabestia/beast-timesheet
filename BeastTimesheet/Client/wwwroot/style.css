@@ -11,6 +11,10 @@ body {
   overflow: auto;
 }
 
+.pad {
+  padding: 8px;
+}
+
 .grid {
   display: grid;
 }
@@ -45,7 +49,7 @@ body {
   align-items: center;
 }
 
-.loader > .loader-progress-bar {
+.loader>.loader-progress-bar {
   height: 8px;
   width: 300px;
   margin-bottom: 8px;
@@ -54,13 +58,13 @@ body {
   overflow: hidden;
 }
 
-.loader > .loader-progress-bar > .progress {
+.loader>.loader-progress-bar>.progress {
   height: 100%;
   width: var(--blazor-load-percentage, 50%);
   background-color: black;
 }
 
-.loader > .loader-text::before {
+.loader>.loader-text::before {
   content: var(--blazor-load-percentage-text, "Loading...");
 }
 
