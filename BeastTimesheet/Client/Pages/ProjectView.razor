@@ -3,33 +3,31 @@
 @inject HttpClient http
 @inject NavigationManager nav
 
-<h1>Project #@id</h1>
+<Header>
+    Project #@(id + " - " + project?.Name ?? "...")
+</Header>
 
-<div class="fill grid center">
+<Main>
     @if (project is null)
     {
         <p>Loading...</p>
     }
     else
     {
-        <div class="grid stretch gap">
-            <div class="grid">
+        <div class="flex column gap">
+            <div class="fill flex column gap">
                 <label for="name">Name</label>
                 <input id="name" @bind="project.Name">
-            </div>
-            <div class="grid">
                 <label for="hourly-fee">Hourly fee</label>
                 <input id="hourly-fee" @bind="project.HourlyFee">
             </div>
-            <div class="grid stretch gap">
-                <button @onclick="Save">Save</button>
-                <button @onclick="Delete">Delete</button>
-                <button @onclick="Cancel">Cancel</button>
-            </div>
+            <button @onclick="Save">Save</button>
+            <button @onclick="Delete">Delete</button>
+            <button @onclick="Cancel">Cancel</button>
             <p style="visibility: @loadingVisibility">Loading...</p>
         </div>
     }
-</div>
+</Main>
 
 @code {
     Project? project;
