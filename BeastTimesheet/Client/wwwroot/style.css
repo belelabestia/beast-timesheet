@@ -3,8 +3,12 @@ body {
 }
 
 .full {
-  min-height: 100vh;
-  min-width: 100vw;
+  height: 100vh;
+  width: 100vw;
+}
+
+.scroll {
+  overflow: auto;
 }
 
 .grid {
