@@ -2,19 +2,26 @@
 @inject HttpClient http
 @inject Auth auth
 
-<div class="grid center">
+<div class="grid center" @onkeypress="OnKey">
     <div>
         <h1>Login</h1>
         <p>Insert key</p>
-        <input type="password" @bind="input" @bind:event="oninput" @onkeypress="OnKey">
+        <input type="password" @ref="inputReference" @bind="input" @bind:event="oninput">
         <button @onclick="OnConfirm">Confirm</button>
         <p class="error" style="visibility: @errorVisibility">Login failed!</p>
     </div>
 </div>
 
 @code {
+    [Parameter]
+    public ElementReference inputReference { get; set; }
     string? input;
     string errorVisibility = "hidden";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await inputReference.FocusAsync();
+    }
 
     async Task OnConfirm()
     {
@@ -41,3 +48,4 @@
         }
     }
 }
+

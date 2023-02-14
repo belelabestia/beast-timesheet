@@ -4,7 +4,12 @@
 @inject NavigationManager nav
 
 <MainTemplate>
-    <Header>Project #@(id + " - " + project?.Name ?? "...")</Header>
+    <Header>Project #@(id + " - " + (project?.Name is null or "" ? "..." : project!.Name))</Header>
+    <Toolbar>
+        <button @onclick="Save">Save</button>
+        <button @onclick="Delete">Delete</button>
+        <button @onclick="Cancel">Cancel</button>
+    </Toolbar>
     <Main>
         @if (project is null)
         {
@@ -19,9 +24,6 @@
                     <label for="hourly-fee">Hourly fee</label>
                     <input id="hourly-fee" @bind="project.HourlyFee">
                 </div>
-                <button @onclick="Save">Save</button>
-                <button @onclick="Delete">Delete</button>
-                <button @onclick="Cancel">Cancel</button>
                 <p style="visibility: @loadingVisibility">Loading...</p>
             </div>
         }

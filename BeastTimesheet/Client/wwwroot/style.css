@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap");
 
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: "Ubuntu", sans-serif;
@@ -7,17 +12,16 @@ body {
 
 header {
   border-bottom: 1px solid black;
-  text-align: center;
-  padding: 0 16px;
-  white-space: nowrap;
+}
+
+nav > button + button {
+  border-left: 1px solid black;
+  padding-left: 8px;
+  margin-left: 8px;
 }
 
 footer {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
   border-top: 1px solid black;
-  padding: 8px 16px;
 }
 
 button {
@@ -47,10 +51,6 @@ button {
 
 .grid {
   display: grid;
-}
-
-.grid.center {
-  place-items: center;
 }
 
 .grid.stretch {
@@ -106,7 +106,30 @@ button {
   color: red;
 }
 
-.text.center {
+.center {
   text-align: center;
-  vertical-align: middle;
+  place-items: center;
+}
+
+.start {
+  text-align: start;
+  justify-content: start;
+}
+
+.end {
+  text-align: end;
+  justify-content: end;
+}
+
+ul {
+  padding: unset;
+  list-style: none;
+}
+
+li + li {
+  border-top: 1px solid black;
+}
+
+a {
+  color: inherit;
 }
