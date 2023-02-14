@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap");
 
 body {
   margin: 0;
-  font-family: 'Ubuntu', sans-serif
+  font-family: "Ubuntu", sans-serif;
 }
 
 header {
@@ -10,6 +10,26 @@ header {
   text-align: center;
   padding: 0 16px;
   white-space: nowrap;
+}
+
+footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  border-top: 1px solid black;
+  padding: 8px 16px;
+}
+
+button {
+  border: unset;
+  background-color: unset;
+  font-family: unset;
+  font-size: unset;
+  padding: unset;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .full {
@@ -59,7 +79,7 @@ header {
   align-items: center;
 }
 
-.loader>.loader-progress-bar {
+.loader > .loader-progress-bar {
   height: 8px;
   width: 300px;
   margin-bottom: 8px;
@@ -68,13 +88,13 @@ header {
   overflow: hidden;
 }
 
-.loader>.loader-progress-bar>.progress {
+.loader > .loader-progress-bar > .progress {
   height: 100%;
   width: var(--blazor-load-percentage, 50%);
   background-color: black;
 }
 
-.loader>.loader-text::before {
+.loader > .loader-text::before {
   content: var(--blazor-load-percentage-text, "Loading...");
 }
 
