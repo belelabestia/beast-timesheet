@@ -1,12 +1,18 @@
-﻿@inherits LayoutComponentBase
+﻿@using BeastTimesheet.Shared
+@inherits LayoutComponentBase
 @inject HttpClient http
 @inject Auth auth
 
 <div class="flex column">
     @Body
+    <footer>
+        <span>version @version</span>
+        <button @onclick="Logout">Logout</button>
+    </footer>
 </div>
 
 @code {
+    string version = Config.Version;
     void Logout()
     {
         http.DefaultRequestHeaders.Remove("Key");

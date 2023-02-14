@@ -1,0 +1,18 @@
+<header>
+    <h1>@Header</h1>
+</header>
+<main class="fill grid pad">@Main</main>
+
+@code {
+    [Parameter]
+
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+
+    public RenderFragment? Header { get; set; }
+
+    [Parameter]
+
+    public RenderFragment? Main { get; set; }
+}

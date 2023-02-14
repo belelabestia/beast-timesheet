@@ -3,31 +3,30 @@
 @inject HttpClient http
 @inject NavigationManager nav
 
-<Header>
-    Project #@(id + " - " + project?.Name ?? "...")
-</Header>
-
-<Main>
-    @if (project is null)
-    {
-        <p>Loading...</p>
-    }
-    else
-    {
-        <div class="flex column gap">
-            <div class="fill flex column gap">
-                <label for="name">Name</label>
-                <input id="name" @bind="project.Name">
-                <label for="hourly-fee">Hourly fee</label>
-                <input id="hourly-fee" @bind="project.HourlyFee">
+<MainTemplate>
+    <Header>Project #@(id + " - " + project?.Name ?? "...")</Header>
+    <Main>
+        @if (project is null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <div class="flex column gap">
+                <div class="fill flex column gap">
+                    <label for="name">Name</label>
+                    <input id="name" @bind="project.Name">
+                    <label for="hourly-fee">Hourly fee</label>
+                    <input id="hourly-fee" @bind="project.HourlyFee">
+                </div>
+                <button @onclick="Save">Save</button>
+                <button @onclick="Delete">Delete</button>
+                <button @onclick="Cancel">Cancel</button>
+                <p style="visibility: @loadingVisibility">Loading...</p>
             </div>
-            <button @onclick="Save">Save</button>
-            <button @onclick="Delete">Delete</button>
-            <button @onclick="Cancel">Cancel</button>
-            <p style="visibility: @loadingVisibility">Loading...</p>
-        </div>
-    }
-</Main>
+        }
+    </Main>
+</MainTemplate>
 
 @code {
     Project? project;

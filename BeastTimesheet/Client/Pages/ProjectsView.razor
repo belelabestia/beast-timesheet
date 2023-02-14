@@ -4,46 +4,47 @@
 @inject HttpClient http
 @inject NavigationManager nav
 
-<Header>Projects</Header>
-
-<Main>
-    @if (projects is null)
-    {
-        <p>Loading...</p>
-    }
-    else
-    {
-        @if (!projects.Any())
+<MainTemplate>
+    <Header>Projects</Header>
+    <Main>
+        @if (projects is null)
         {
-            <div class="grid center">
-                <div class="grid gap">
-                    <p>Nothing to show here.</p>
-                    <button @onclick="Create">Create project</button>
-                    <p style="visibility: @creatingVisibility">Creating...</p>
-                </div>
-            </div>
+            <p>Loading...</p>
         }
         else
         {
-            <div class="flex column gap">
-                <ul>
-                    @foreach (var project in projects)
-                    {
-                        <li>
-                            <NavLink href="@($"projects/{project.Id}")">
-                                @(project.Name is not "" ? project.Name : "No name - #" +
-                                    project.Id)
-                            </NavLink>
-                        </li>
-                    }
-                </ul>
+            @if (!projects.Any())
+            {
                 <div class="grid center">
-                    <button @onclick="Create">Create project</button>
+                    <div class="grid gap">
+                        <p>Nothing to show here.</p>
+                        <button @onclick="Create">Create project</button>
+                        <p style="visibility: @creatingVisibility">Creating...</p>
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="flex column gap">
+                    <ul>
+                        @foreach (var project in projects)
+                        {
+                            <li>
+                                <NavLink href="@($"projects/{project.Id}")">
+                                    @(project.Name is not "" ? project.Name : "No name - #" +
+                                        project.Id)
+                                </NavLink>
+                            </li>
+                        }
+                    </ul>
+                    <div class="grid center">
+                        <button @onclick="Create">Create project</button>
+                    </div>
+                </div>
+            }
         }
-    }
-</Main>
+    </Main>
+</MainTemplate>
 
 @code {
     IEnumerable<Project>? projects;
