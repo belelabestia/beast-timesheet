@@ -37,7 +37,7 @@ header {
   place-items: stretch;
 }
 
-.grid.gap {
+.gap {
   gap: 8px;
 }
 
