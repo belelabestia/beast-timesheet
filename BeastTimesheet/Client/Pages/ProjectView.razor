@@ -4,7 +4,7 @@
 @inject NavigationManager nav
 
 <MainTemplate>
-    <Header>Project #@(id + " - " + (project?.Name is null or "" ? "..." : project!.Name))</Header>
+    <Header>Project #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))</Header>
     <Toolbar>
         <button @onclick="Save">Save</button>
         <button @onclick="Delete">Delete</button>
