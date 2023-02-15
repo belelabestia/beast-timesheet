@@ -1,0 +1,27 @@
+@namespace BeastTimesheet.Client.Shared
+
+@if (State == AsyncButtonState.Ready)
+{
+    <button @onclick="OnClick">@ButtonText</button>
+}
+else if (State == AsyncButtonState.Loading)
+{
+    <p>@LoadingText</p>
+}
+else
+{
+    <p class="error">@ErrorText</p>
+}
+
+@code {
+    [Parameter]
+    public AsyncButtonState State { get; set; } = AsyncButtonState.Ready;
+    [Parameter, EditorRequired]
+    public RenderFragment? ButtonText { get; set; }
+    [Parameter]
+    public RenderFragment? LoadingText { get; set; }
+    [Parameter]
+    public RenderFragment? ErrorText { get; set; }
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+}

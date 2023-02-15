@@ -7,7 +7,14 @@
 <MainTemplate>
     <Header>Projects</Header>
     <Toolbar>
-        <button @onclick="Create">Create project</button>
+        @if (creating)
+        {
+            <p>Creating...</p>
+        }
+        else
+        {
+            <button @onclick="Create">Create project</button>
+        }
     </Toolbar>
     <Main>
         @if (projects is null)
@@ -18,11 +25,17 @@
         {
             @if (!projects.Any())
             {
-                <div class="grid center">
+                <div class="grid center fill">
                     <div class="grid gap">
                         <p>Nothing to show here.</p>
-                        <button @onclick="Create">Create project</button>
-                        <p style="visibility: @creatingVisibility">Creating...</p>
+                        @if (creating)
+                        {
+                            <p>Creating...</p>
+                        }
+                        else
+                        {
+                            <button @onclick="Create">Create project</button>
+                        }
                     </div>
                 </div>
             }
@@ -46,7 +59,7 @@
 
 @code {
     IEnumerable<Project>? projects;
-    string creatingVisibility = "hidden";
+    bool creating;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,7 +68,7 @@
 
     async Task Create()
     {
-        creatingVisibility = "visible";
+        creating = true;
         var res = await http.PostAsJsonAsync("api/Projects", new Project());
         var project = await res.Content.ReadFromJsonAsync<Project>();
         nav.NavigateTo($"projects/{project!.Id}");

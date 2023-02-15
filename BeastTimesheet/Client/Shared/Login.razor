@@ -2,21 +2,42 @@
 @inject HttpClient http
 @inject Auth auth
 
-<div class="grid center" @onkeypress="OnKey">
-    <div>
-        <h1>Login</h1>
-        <p>Insert key</p>
-        <input type="password" @ref="inputReference" @bind="input" @bind:event="oninput">
-        <button @onclick="OnConfirm">Confirm</button>
-        <p class="error" style="visibility: @errorVisibility">Login failed!</p>
-    </div>
+<div class="flex column">
+    <MainTemplate>
+        <Header>Login</Header>
+        <Main>
+            <div class="grid center fill">
+                <div class="grid gap">
+                    <p>Insert key</p>
+                    <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput"
+                        @onkeypress="OnKey">
+                    <AsyncButton OnClick="OnConfirm" State="LoginState">
+                        <ButtonText>Confirm</ButtonText>
+                        <LoadingText>Logging in...</LoadingText>
+                        <ErrorText>Login failed!</ErrorText>
+                    </AsyncButton>
+                </div>
+            </div>
+        </Main>
+    </MainTemplate>
 </div>
 
 @code {
     [Parameter]
     public ElementReference inputReference { get; set; }
+
     string? input;
-    string errorVisibility = "hidden";
+    string? Input
+    {
+        get => input;
+        set
+        {
+            input = value;
+            LoginState = AsyncButtonState.Ready;
+        }
+    }
+
+    AsyncButtonState LoginState { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -25,6 +46,8 @@
 
     async Task OnConfirm()
     {
+        LoginState = AsyncButtonState.Loading;
+
         http.DefaultRequestHeaders.Remove("Key");
         http.DefaultRequestHeaders.Add("Key", input);
 
@@ -32,7 +55,7 @@
 
         if (res.StatusCode is not HttpStatusCode.OK)
         {
-            errorVisibility = "visible";
+            LoginState = AsyncButtonState.Error;
             return;
         }
 
