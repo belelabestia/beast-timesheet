@@ -12,6 +12,9 @@ body {
 
 header {
   border-bottom: 1px solid black;
+  position: sticky;
+  top: 0;
+  background-color: white;
 }
 
 nav > button + button {
@@ -22,6 +25,9 @@ nav > button + button {
 
 footer {
   border-top: 1px solid black;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
 }
 
 button {
