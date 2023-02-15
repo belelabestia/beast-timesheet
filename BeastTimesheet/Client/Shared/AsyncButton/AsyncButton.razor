@@ -4,11 +4,11 @@
 {
     <button @onclick="OnClick" disabled="@Disabled">@ButtonText</button>
 }
-else if (State == AsyncButtonState.Loading)
+else if (State == AsyncButtonState.Loading && LoadingText is not null)
 {
     <p>@LoadingText</p>
 }
-else
+else if (ErrorText is not null)
 {
     <p class="error">@ErrorText</p>
 }

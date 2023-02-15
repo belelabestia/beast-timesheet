@@ -19,6 +19,7 @@
         <button @onclick="Cancel" disabled="@DisableButtons">Cancel</button>
     </Toolbar>
     <Main>
+        <h2 class="pad center">Data</h2>
         @if (project is null)
         {
             <p>Loading...</p>
@@ -34,6 +35,12 @@
                 </div>
             </div>
         }
+        <h2 class="center pad">Timesheets</h2>
+        <ul>
+            <li class="pad">TS1</li>
+            <li class="pad">TS2</li>
+            <li class="pad">TS3</li>
+        </ul>
     </Main>
 </MainTemplate>
 
