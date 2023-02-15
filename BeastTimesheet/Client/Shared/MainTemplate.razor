@@ -2,7 +2,11 @@
     <h1 class="center">@Header</h1>
     <nav class="flex end">@Toolbar</nav>
 </header>
-<main class="fill grid pad">@Main</main>
+<main class="fill grid">
+    <div class="page pad">
+        @Main
+    </div>
+</main>
 
 @code {
     [Parameter]
