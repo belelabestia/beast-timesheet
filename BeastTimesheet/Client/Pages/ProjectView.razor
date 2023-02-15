@@ -6,9 +6,17 @@
 <MainTemplate>
     <Header>Project #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))</Header>
     <Toolbar>
-        <button @onclick="Save">Save</button>
-        <button @onclick="Delete">Delete</button>
-        <button @onclick="Cancel">Cancel</button>
+        <AsyncButton OnClick="Save" State="SavingState" Disabled="DisableButtons">
+            <ButtonText>Save</ButtonText>
+            <LoadingText>Saving...</LoadingText>
+            <ErrorText>Saving failed!</ErrorText>
+        </AsyncButton>
+        <AsyncButton OnClick="Delete" State="DeletingState" Disabled="DisableButtons">
+            <ButtonText>Delete</ButtonText>
+            <LoadingText>Deleting...</LoadingText>
+            <ErrorText>Deleting failed!</ErrorText>
+        </AsyncButton>
+        <button @onclick="Cancel" disabled="@DisableButtons">Cancel</button>
     </Toolbar>
     <Main>
         @if (project is null)
@@ -24,7 +32,6 @@
                     <label for="hourly-fee">Hourly fee</label>
                     <input id="hourly-fee" @bind="project.HourlyFee">
                 </div>
-                <p style="visibility: @loadingVisibility">Loading...</p>
             </div>
         }
     </Main>
@@ -32,7 +39,10 @@
 
 @code {
     Project? project;
-    string loadingVisibility = "hidden";
+    AsyncButtonState SavingState;
+    AsyncButtonState DeletingState;
+    bool DisableButtons => SavingState.Merge(DeletingState) is not AsyncButtonState.Ready;
+
     [Parameter]
     public int id { get; set; }
 
@@ -43,15 +53,37 @@
 
     async Task Save()
     {
-        loadingVisibility = "visible";
-        await http.PutAsJsonAsync($"api/projects/{id}", project);
+        SavingState = AsyncButtonState.Loading;
+
+        await Task.Delay(2000);
+
+        try
+        {
+            await http.PutAsJsonAsync($"api/projects/{id}", project);
+        }
+        catch
+        {
+            SavingState = AsyncButtonState.Error;
+        }
+
         Back();
     }
 
     async Task Delete()
     {
-        loadingVisibility = "visible";
-        await http.DeleteAsync($"api/projects/{id}");
+        DeletingState = AsyncButtonState.Loading;
+
+        await Task.Delay(2000);
+
+        try
+        {
+            await http.DeleteAsync($"api/projects/{id}");
+        }
+        catch
+        {
+            DeletingState = AsyncButtonState.Error;
+        }
+
         Back();
     }
 

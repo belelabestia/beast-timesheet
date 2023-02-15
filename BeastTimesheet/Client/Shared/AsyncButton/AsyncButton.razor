@@ -2,7 +2,7 @@
 
 @if (State == AsyncButtonState.Ready)
 {
-    <button @onclick="OnClick">@ButtonText</button>
+    <button @onclick="OnClick" disabled="@Disabled">@ButtonText</button>
 }
 else if (State == AsyncButtonState.Loading)
 {
@@ -24,4 +24,6 @@ else
     public RenderFragment? ErrorText { get; set; }
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
+    [Parameter]
+    public bool Disabled { get; set; }
 }
