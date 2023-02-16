@@ -21,45 +21,34 @@
         <button @onclick="Cancel" disabled="@DisableButtons">Cancel</button>
     </Toolbar>
     <Main>
-        <h2 class="pad center">Data</h2>
-        @if (project is null)
-        {
-            <p>Loading...</p>
-        }
-        else
-        {
-            <div class="flex column gap">
-                <div class="fill flex column gap">
+        <AsyncResource State="LoadingState">
+            <ResourceContent>
+                <h2 class="pad center">Data</h2>
+                <div class="flex column gap">
                     <label for="name">Name</label>
-                    <input id="name" @bind="project.Name">
+                    <input id="name" @bind="project!.Name">
                     <label for="hourly-fee">Hourly fee</label>
                     <input id="hourly-fee" @bind="project.HourlyFee">
                 </div>
-            </div>
-            <h2 class="center pad">Timesheets</h2>
-            @if (project.Timesheets is null)
-            {
-                <div class="grid center fill">
-                    <div class="grid gap">
-                        <p>Nothing to show here.</p>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <ul>
-                    @foreach (var timesheet in project.Timesheets)
-                    {
+                <h2 class="center pad">Timesheets</h2>
+                <ListView Items="project.Timesheets" Context="timesheet">
+                    <ItemTemplate>
                         <li class="pad">@timesheet.Name</li>
-                    }
-                </ul>
-            }
-        }
+                    </ItemTemplate>
+                    <EmptyContent>
+                        <p>Nothing to show here.</p>
+                    </EmptyContent>
+                </ListView>
+            </ResourceContent>
+            <LoadingText>Loading project...</LoadingText>
+            <ErrorText>Loading project failed!</ErrorText>
+        </AsyncResource>
     </Main>
 </MainTemplate>
 
 @code {
     Project? project;
+    AsyncResourceState LoadingState;
     AsyncButtonState SavingState;
     AsyncButtonState DeletingState;
     bool DisableButtons => SavingState.Merge(DeletingState) is not AsyncButtonState.Ready;
@@ -69,7 +58,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", Config.JsonSerializerOptions);
+        await Task.Delay(2000);
+
+        try
+        {
+            project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", Config.JsonSerializerOptions);
+            LoadingState = AsyncResourceState.Success;
+        }
+        catch
+        {
+            LoadingState = AsyncResourceState.Error;
+        }
     }
 
     async Task Save()

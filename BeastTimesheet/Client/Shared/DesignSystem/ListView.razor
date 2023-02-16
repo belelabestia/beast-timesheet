@@ -1,0 +1,27 @@
+@namespace BeastTimesheet.DesignSystem
+@typeparam TItem
+
+@if (Items?.Any() ?? false)
+{
+    <ul>
+        @foreach (var item in Items)
+        {
+            <li class="pad">@ItemTemplate?.Invoke(item)</li>
+        }
+    </ul>
+}
+else
+{
+    <div class="grid center fill">
+        <div class="grid gap">@EmptyContent</div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IEnumerable<TItem>? Items { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment<TItem>? ItemTemplate { get; set; }
+    [Parameter]
+    public RenderFragment? EmptyContent { get; set; }
+}

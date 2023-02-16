@@ -17,39 +17,27 @@
     </Toolbar>
     <Main>
         <AsyncResource State="LoadingState">
-            <Content>
-                @if (!projects!.Any())
-                {
-                    <div class="grid center fill">
-                        <div class="grid gap">
-                            <p>Nothing to show here.</p>
-                            <AsyncButton OnClick="Create" State="CreatingState">
-                                <ButtonText>Create project</ButtonText>
-                                <LoadingText>Creating...</LoadingText>
-                                <ErrorText>Creating failed!</ErrorText>
-                            </AsyncButton>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <ul>
-                        @foreach (var project in projects!)
-                        {
-                            <li class="pad">
-                                <NavLink href="@($"projects/{project.Id}")">
-                                    @(project.Name is not "" ? project.Name : "Draft - #" +
-                                        project.Id)
-                                </NavLink>
-                            </li>
-                        }
-                    </ul>
-                }
-            </Content>
+            <ResourceContent>
+                <ListView Items="projects" Context="project">
+                    <ItemTemplate>
+                        <NavLink href="@($"projects/{project.Id}")">
+                            @(project.Name is not "" ? project.Name : "Draft - #" +
+                                project.Id)
+                        </NavLink>
+                    </ItemTemplate>
+                    <EmptyContent>
+                        <p>Nothing to show here.</p>
+                        <AsyncButton OnClick="Create" State="CreatingState">
+                            <ButtonText>Create project</ButtonText>
+                            <LoadingText>Creating...</LoadingText>
+                            <ErrorText>Creating failed!</ErrorText>
+                        </AsyncButton>
+                    </EmptyContent>
+                </ListView>
+            </ResourceContent>
             <LoadingText>Loading projects...</LoadingText>
             <ErrorText>Loading projects failed!</ErrorText>
         </AsyncResource>
-
     </Main>
 </MainTemplate>
 
@@ -57,10 +45,11 @@
     IEnumerable<Project>? projects;
     AsyncResourceState LoadingState;
     AsyncButtonState CreatingState;
-    bool creating;
 
     protected override async Task OnInitializedAsync()
     {
+        await Task.Delay(2000);
+
         try
         {
             projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", Config.JsonSerializerOptions);
@@ -75,6 +64,8 @@
     async Task Create()
     {
         CreatingState = AsyncButtonState.Loading;
+
+        await Task.Delay(2000);
 
         try
         {
