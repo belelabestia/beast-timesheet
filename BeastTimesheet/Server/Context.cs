@@ -7,8 +7,6 @@ public class BeastTimesheetContext : DbContext
     public DbSet<Timesheet>? Timesheets { get; set; }
     public DbSet<Session>? Sessions { get; set; }
     public DbSet<Bill>? Bills { get; set; }
-    public DbSet<Blog>? Blogs { get; set; }
-    public DbSet<Post>? Posts { get; set; }
 
     public BeastTimesheetContext(DbContextOptions<BeastTimesheetContext> options) : base(options) { }
 }

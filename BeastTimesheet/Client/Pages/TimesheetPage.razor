@@ -1,0 +1,28 @@
+@page "/timesheets/{id:int}"
+@using BeastTimesheet.DesignSystem
+@using BeastTimesheet.Shared.Model
+
+<MainTemplate>
+    <Header>
+        <AsyncResource State="LoadingState">
+            <ResourceContent>Timesheet #1 - @timesheet?.Name</ResourceContent>
+            <LoadingText>...</LoadingText>
+            <ErrorText>Ops!</ErrorText>
+        </AsyncResource>
+    </Header>
+    <Toolbar>
+
+    </Toolbar>
+</MainTemplate>
+
+@code {
+    AsyncResourceState LoadingState;
+    Timesheet? timesheet;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(2000);
+
+    }
+}
+

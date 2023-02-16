@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using BeastTimesheet.Shared;
 using BeastTimesheet.Shared.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,12 +8,10 @@ namespace BeastTimesheet.Server.Controllers;
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase
 {
-    private readonly ILogger<WeatherForecastController> _logger;
     private readonly BeastTimesheetContext _context;
 
-    public ProjectsController(ILogger<WeatherForecastController> logger, BeastTimesheetContext context)
+    public ProjectsController(BeastTimesheetContext context)
     {
-        _logger = logger;
         _context = context;
     }
 

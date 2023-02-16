@@ -26,6 +26,11 @@
             <LoadingText>Deleting...</LoadingText>
             <ErrorText>Deleting failed!</ErrorText>
         </AsyncButton>
+        <AsyncButton OnClick="CreateTimesheet" State="CreatingTimesheetState" Disabled="DisableButtons">
+            <ButtonText>Create timesheet</ButtonText>
+            <LoadingText>Creating timesheet...</LoadingText>
+            <ErrorText>Creating timesheet failed!</ErrorText>
+        </AsyncButton>
         <button @onclick="Cancel" disabled="@DisableButtons">Cancel</button>
     </Toolbar>
     <Main>
@@ -45,6 +50,11 @@
                     </ItemTemplate>
                     <EmptyContent>
                         <p>Nothing to show here.</p>
+                        <AsyncButton OnClick="CreateTimesheet" State="CreatingTimesheetState" Disabled="DisableButtons">
+                            <ButtonText>Create timesheet</ButtonText>
+                            <LoadingText>Creating timesheet...</LoadingText>
+                            <ErrorText>Creating timesheet failed!</ErrorText>
+                        </AsyncButton>
                     </EmptyContent>
                 </ListView>
             </ResourceContent>
@@ -59,7 +69,8 @@
     AsyncResourceState LoadingState;
     AsyncButtonState SavingState;
     AsyncButtonState DeletingState;
-    bool DisableButtons => SavingState.Merge(DeletingState) is not AsyncButtonState.Ready;
+    AsyncButtonState CreatingTimesheetState;
+    bool DisableButtons => SavingState.Merge(DeletingState).Merge(CreatingTimesheetState) is not AsyncButtonState.Ready;
 
     [Parameter]
     public int id { get; set; }
@@ -118,6 +129,11 @@
     void Cancel()
     {
         Back();
+    }
+
+    async Task CreateTimesheet()
+    {
+        await Task.Delay(2000);
     }
 
     void Back() => nav.NavigateTo("projects");
