@@ -6,7 +6,15 @@
 @inject NavigationManager nav
 
 <MainTemplate>
-    <Header>Project #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))</Header>
+    <Header>
+        <AsyncResource State="LoadingState">
+            <ResourceContent>
+                Project #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))
+            </ResourceContent>
+            <LoadingText>...</LoadingText>
+            <ErrorText>Ops!</ErrorText>
+        </AsyncResource>
+    </Header>
     <Toolbar>
         <AsyncButton OnClick="Save" State="SavingState" Disabled="DisableButtons">
             <ButtonText>Save</ButtonText>
