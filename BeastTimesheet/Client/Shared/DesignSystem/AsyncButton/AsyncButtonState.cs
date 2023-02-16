@@ -1,3 +1,5 @@
+namespace BeastTimesheet.DesignSystem;
+
 public enum AsyncButtonState { Ready, Loading, Error }
 
 public static class AsyncButtonStateExtensions

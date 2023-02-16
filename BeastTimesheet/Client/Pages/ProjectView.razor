@@ -1,5 +1,6 @@
 @using BeastTimesheet.Shared.Model
 @using BeastTimesheet.Shared
+@using BeastTimesheet.DesignSystem
 @page "/projects/{id:int}"
 @inject HttpClient http
 @inject NavigationManager nav
@@ -36,15 +37,23 @@
                 </div>
             </div>
             <h2 class="center pad">Timesheets</h2>
-            <ul>
-                <li class="pad">TS1</li>
-                <li class="pad">TS2</li>
-                <li class="pad">TS3</li>
-                @foreach (var timesheet in project.Timesheets ?? new List<Timesheet> { new Timesheet { Name = "AAAAAAA" } })
-                {
-                    <li class="pad">@timesheet.Name</li>
-                }
-            </ul>
+            @if (project.Timesheets is null)
+            {
+                <div class="grid center fill">
+                    <div class="grid gap">
+                        <p>Nothing to show here.</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <ul>
+                    @foreach (var timesheet in project.Timesheets)
+                    {
+                        <li class="pad">@timesheet.Name</li>
+                    }
+                </ul>
+            }
         }
     </Main>
 </MainTemplate>
@@ -61,8 +70,6 @@
     protected override async Task OnInitializedAsync()
     {
         project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", Config.JsonSerializerOptions);
-        Console.WriteLine("eee", project?.Timesheets);
-        Console.WriteLine("aaa", project);
     }
 
     async Task Save()
