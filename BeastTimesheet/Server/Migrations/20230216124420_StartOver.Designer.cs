@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeastTimesheet.Server.Migrations
 {
     [DbContext(typeof(BeastTimesheetContext))]
-    [Migration("20230216003238_StartOver")]
+    [Migration("20230216124420_StartOver")]
     partial class StartOver
     {
         /// <inheritdoc />
