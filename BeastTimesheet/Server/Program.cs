@@ -1,12 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using BeastTimesheet.Shared.Model;
-using static Config;
+using static BeastTimesheet.Server.Config;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var connStr = builder.Environment.IsDevelopment() ? LOCAL_CONNECTION_STRING : DOCKER_CONNECTION_STRING;
 
 builder.Services.AddNpgsql<BeastTimesheetContext>(connStr);
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -49,7 +55,7 @@ using (var scope = app.Services.CreateScope())
 
     db.Database.Migrate();
     db.Projects!.ExecuteDelete();
-    db.Projects!.Add(new Project { Id = 1, Name = "Test project", HourlyFee = 25 });
+    db.Projects!.Add(new Project { Id = 1, Name = "Test project", HourlyFee = 25, Timesheets = new List<Timesheet> { new Timesheet { Name = "2022-04 April" } } });
     db.SaveChanges();
 }
 

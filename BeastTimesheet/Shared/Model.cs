@@ -5,7 +5,8 @@ public class Project
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public Decimal HourlyFee { get; set; }
-    IEnumerable<Timesheet>? Timesheets { get; set; }
+    public IEnumerable<Timesheet>? Timesheets { get; set; }
+    public IEnumerable<Bill>? Bills { get; set; }
 }
 
 public enum TimesheetState { Open, Closed }
@@ -15,7 +16,9 @@ public class Timesheet
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public TimesheetState State { get; set; }
+    public int ProjectId { get; set; }
     public Project? Project { get; set; }
+    public IEnumerable<Session>? Sessions { get; set; }
 }
 
 public class Session
@@ -28,6 +31,7 @@ public class Session
     public TimeSpan GrossTime => StopTime - StartTime;
     public TimeSpan NetTime => GrossTime - BreaksTime;
     public Decimal SessionFee => Convert.ToDecimal(NetTime.TotalHours) * Timesheet!.Project!.HourlyFee;
+    public int TimesheetId { get; set; }
     public Timesheet? Timesheet { get; set; }
 }
 
@@ -39,6 +43,8 @@ public class Bill
     public DateTime ExpirationDate { get; set; }
     public bool Expired => DateTime.Now > ExpirationDate;
     public bool Payed { get; set; }
+    public int ProjectId { get; set; }
+    public Project? Project { get; set; }
 }
 
 /**************************************/

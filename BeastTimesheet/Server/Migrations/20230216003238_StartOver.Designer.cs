@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeastTimesheet.Server.Migrations
 {
     [DbContext(typeof(BeastTimesheetContext))]
-    partial class BloggingContextModelSnapshot : ModelSnapshot
+    [Migration("20230216003238_StartOver")]
+    partial class StartOver
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,12 @@ namespace BeastTimesheet.Server.Migrations
                     b.Property<bool>("Payed")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Bills");
                 });
@@ -120,7 +128,7 @@ namespace BeastTimesheet.Server.Migrations
                     b.Property<TimeOnly>("StopTime")
                         .HasColumnType("time without time zone");
 
-                    b.Property<int?>("TimesheetId")
+                    b.Property<int>("TimesheetId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -142,7 +150,7 @@ namespace BeastTimesheet.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
                     b.Property<int>("State")
@@ -153,6 +161,17 @@ namespace BeastTimesheet.Server.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Timesheets");
+                });
+
+            modelBuilder.Entity("BeastTimesheet.Shared.Model.Bill", b =>
+                {
+                    b.HasOne("BeastTimesheet.Shared.Model.Project", "Project")
+                        .WithMany("Bills")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Post", b =>
@@ -169,8 +188,10 @@ namespace BeastTimesheet.Server.Migrations
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Session", b =>
                 {
                     b.HasOne("BeastTimesheet.Shared.Model.Timesheet", "Timesheet")
-                        .WithMany()
-                        .HasForeignKey("TimesheetId");
+                        .WithMany("Sessions")
+                        .HasForeignKey("TimesheetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Timesheet");
                 });
@@ -178,8 +199,10 @@ namespace BeastTimesheet.Server.Migrations
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Timesheet", b =>
                 {
                     b.HasOne("BeastTimesheet.Shared.Model.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
+                        .WithMany("Timesheets")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
                 });
@@ -187,6 +210,18 @@ namespace BeastTimesheet.Server.Migrations
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Blog", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("BeastTimesheet.Shared.Model.Project", b =>
+                {
+                    b.Navigation("Bills");
+
+                    b.Navigation("Timesheets");
+                });
+
+            modelBuilder.Entity("BeastTimesheet.Shared.Model.Timesheet", b =>
+                {
+                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

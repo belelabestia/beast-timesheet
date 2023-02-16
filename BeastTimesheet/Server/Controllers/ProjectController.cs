@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BeastTimesheet.Shared;
 using BeastTimesheet.Shared.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeastTimesheet.Server.Controllers;
 
@@ -26,9 +27,9 @@ public class ProjectsController : ControllerBase
     [HttpGet("{id:int}")]
     public Project? GetProject(int id)
     {
-        return _context.Projects!.SingleOrDefault(p => p.Id == id);
+        return _context.Projects!.Include(project => project.Timesheets).SingleOrDefault(p => p.Id == id);
     }
-    
+
     [HttpPost]
     public Project CreateProject(Project project)
     {

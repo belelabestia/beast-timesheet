@@ -1,6 +1,7 @@
 @page "/"
 @page "/projects"
 @using BeastTimesheet.Shared.Model
+@using BeastTimesheet.Shared
 @inject HttpClient http
 @inject NavigationManager nav
 
@@ -63,7 +64,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects");
+        projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", Config.JsonSerializerOptions);
     }
 
     async Task Create()
