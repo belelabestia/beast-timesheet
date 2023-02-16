@@ -9,71 +9,83 @@
 <MainTemplate>
     <Header>Projects</Header>
     <Toolbar>
-        @if (creating)
-        {
-            <p>Creating...</p>
-        }
-        else
-        {
-            <button @onclick="Create">Create project</button>
-        }
+        <AsyncButton OnClick="Create" State="CreatingState">
+            <ButtonText>Create project</ButtonText>
+            <LoadingText>Creating...</LoadingText>
+            <ErrorText>Creating failed!</ErrorText>
+        </AsyncButton>
     </Toolbar>
     <Main>
-        @if (projects is null)
-        {
-            <p>Loading...</p>
-        }
-        else
-        {
-            @if (!projects.Any())
-            {
-                <div class="grid center fill">
-                    <div class="grid gap">
-                        <p>Nothing to show here.</p>
-                        @if (creating)
-                        {
-                            <p>Creating...</p>
-                        }
-                        else
-                        {
-                            <button @onclick="Create">Create project</button>
-                        }
+        <AsyncResource State="LoadingState">
+            <Content>
+                @if (!projects!.Any())
+                {
+                    <div class="grid center fill">
+                        <div class="grid gap">
+                            <p>Nothing to show here.</p>
+                            <AsyncButton OnClick="Create" State="CreatingState">
+                                <ButtonText>Create project</ButtonText>
+                                <LoadingText>Creating...</LoadingText>
+                                <ErrorText>Creating failed!</ErrorText>
+                            </AsyncButton>
+                        </div>
                     </div>
-                </div>
-            }
-            else
-            {
-                <ul>
-                    @foreach (var project in projects)
-                    {
-                        <li class="pad">
-                            <NavLink href="@($"projects/{project.Id}")">
-                                @(project.Name is not "" ? project.Name : "Draft - #" +
-                                    project.Id)
-                            </NavLink>
-                        </li>
-                    }
-                </ul>
-            }
-        }
+                }
+                else
+                {
+                    <ul>
+                        @foreach (var project in projects!)
+                        {
+                            <li class="pad">
+                                <NavLink href="@($"projects/{project.Id}")">
+                                    @(project.Name is not "" ? project.Name : "Draft - #" +
+                                        project.Id)
+                                </NavLink>
+                            </li>
+                        }
+                    </ul>
+                }
+            </Content>
+            <LoadingText>Loading projects...</LoadingText>
+            <ErrorText>Loading projects failed!</ErrorText>
+        </AsyncResource>
+
     </Main>
 </MainTemplate>
 
 @code {
     IEnumerable<Project>? projects;
+    AsyncResourceState LoadingState;
+    AsyncButtonState CreatingState;
     bool creating;
 
     protected override async Task OnInitializedAsync()
     {
-        projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", Config.JsonSerializerOptions);
+        try
+        {
+            projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", Config.JsonSerializerOptions);
+            LoadingState = AsyncResourceState.Success;
+        }
+        catch
+        {
+            LoadingState = AsyncResourceState.Error;
+        }
     }
 
     async Task Create()
     {
-        creating = true;
-        var res = await http.PostAsJsonAsync("api/Projects", new Project());
-        var project = await res.Content.ReadFromJsonAsync<Project>();
-        nav.NavigateTo($"projects/{project!.Id}");
+        CreatingState = AsyncButtonState.Loading;
+
+        try
+        {
+            var res = await http.PostAsJsonAsync("api/Projects", new Project());
+            var project = await res.Content.ReadFromJsonAsync<Project>();
+            nav.NavigateTo($"projects/{project!.Id}");
+        }
+        catch
+        {
+            CreatingState = AsyncButtonState.Error;
+        }
     }
 }
 

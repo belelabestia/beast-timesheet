@@ -3,13 +3,11 @@
 @inject HttpClient http
 @inject Auth auth
 
-<div class="flex column">
-    @Body
-    <footer class="pad flex end gap">
-        <span>version @version</span>
-        <button @onclick="Logout">Logout</button>
-    </footer>
-</div>
+@Body
+<footer class="pad flex end gap">
+    <span>version @version</span>
+    <button @onclick="Logout">Logout</button>
+</footer>
 
 @code {
     string version = Config.Version;

@@ -3,25 +3,22 @@
 @inject HttpClient http
 @inject Auth auth
 
-<div class="flex column">
-    <MainTemplate>
-        <Header>Login</Header>
-        <Main>
-            <div class="grid center fill">
-                <div class="grid gap">
-                    <p>Insert key</p>
-                    <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput"
-                        @onkeypress="OnKey">
-                    <AsyncButton OnClick="OnConfirm" State="LoginState">
-                        <ButtonText>Confirm</ButtonText>
-                        <LoadingText>Logging in...</LoadingText>
-                        <ErrorText>Login failed!</ErrorText>
-                    </AsyncButton>
-                </div>
+<MainTemplate>
+    <Header>Login</Header>
+    <Main>
+        <div class="grid center fill">
+            <div class="grid gap">
+                <p>Insert key</p>
+                <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput" @onkeypress="OnKey">
+                <AsyncButton OnClick="OnConfirm" State="LoginState">
+                    <ButtonText>Confirm</ButtonText>
+                    <LoadingText>Logging in...</LoadingText>
+                    <ErrorText>Login failed!</ErrorText>
+                </AsyncButton>
             </div>
-        </Main>
-    </MainTemplate>
-</div>
+        </div>
+    </Main>
+</MainTemplate>
 
 @code {
     [Parameter]

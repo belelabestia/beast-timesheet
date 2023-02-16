@@ -1,0 +1,25 @@
+@namespace BeastTimesheet.DesignSystem
+
+@if (State is AsyncResourceState.Loading && LoadingText is not null)
+{
+    <p class="pad">@LoadingText</p>
+}
+else if (State is AsyncResourceState.Success)
+{
+    @Content
+}
+else if (State is AsyncResourceState.Error && ErrorText is not null)
+{
+    <p class="error">@ErrorText</p>
+}
+
+@code {
+    [Parameter]
+    public AsyncResourceState State { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment? Content { get; set; }
+    [Parameter]
+    public RenderFragment? LoadingText { get; set; }
+    [Parameter]
+    public RenderFragment? ErrorText { get; set; }
+}
