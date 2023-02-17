@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeastTimesheet.Server.Migrations
 {
     [DbContext(typeof(BeastTimesheetContext))]
-    [Migration("20230216124420_StartOver")]
+    [Migration("20230217000344_StartOver")]
     partial class StartOver
     {
         /// <inheritdoc />
@@ -46,46 +46,6 @@ namespace BeastTimesheet.Server.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Bills");
-                });
-
-            modelBuilder.Entity("BeastTimesheet.Shared.Model.Blog", b =>
-                {
-                    b.Property<int>("BlogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BlogId"));
-
-                    b.Property<string>("Url")
-                        .HasColumnType("text");
-
-                    b.HasKey("BlogId");
-
-                    b.ToTable("Blogs");
-                });
-
-            modelBuilder.Entity("BeastTimesheet.Shared.Model.Post", b =>
-                {
-                    b.Property<int>("PostId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PostId"));
-
-                    b.Property<int>("BlogId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
-                    b.HasKey("PostId");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Project", b =>
@@ -174,17 +134,6 @@ namespace BeastTimesheet.Server.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("BeastTimesheet.Shared.Model.Post", b =>
-                {
-                    b.HasOne("BeastTimesheet.Shared.Model.Blog", "Blog")
-                        .WithMany("Posts")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-                });
-
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Session", b =>
                 {
                     b.HasOne("BeastTimesheet.Shared.Model.Timesheet", "Timesheet")
@@ -205,11 +154,6 @@ namespace BeastTimesheet.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("BeastTimesheet.Shared.Model.Blog", b =>
-                {
-                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Project", b =>
