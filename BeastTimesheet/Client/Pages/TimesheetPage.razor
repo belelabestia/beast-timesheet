@@ -1,28 +1,93 @@
-@page "/timesheets/{id:int}"
 @using BeastTimesheet.DesignSystem
 @using BeastTimesheet.Shared.Model
+@using static BeastTimesheet.Shared.Config
+@page "/timesheets/{id:int}"
+@inject HttpClient http
+@inject NavigationManager nav
 
 <MainTemplate>
     <Header>
-        <AsyncResource State="LoadingState">
-            <ResourceContent>Timesheet #1 - @timesheet?.Name</ResourceContent>
+        <AsyncResource State="loadingState">
+            <ResourceContent>
+                Project #@(id + " - " + (timesheet?.Name is null or "" ? "Draft" : timesheet!.Name))
+            </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
         </AsyncResource>
     </Header>
     <Toolbar>
-
+        @* <AsyncButton OnClick="Save" State="savingState" Disabled="disableButtons">
+        <ButtonText>Save</ButtonText>
+        <LoadingText>Saving...</LoadingText>
+        <ErrorText>Saving failed!</ErrorText>
+        </AsyncButton>
+        <AsyncButton OnClick="Delete" State="deletingState" Disabled="disableButtons">
+        <ButtonText>Delete</ButtonText>
+        <LoadingText>Deleting...</LoadingText>
+        <ErrorText>Deleting failed!</ErrorText>
+        </AsyncButton>
+        <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
+        <ButtonText>Create timesheet</ButtonText>
+        <LoadingText>Creating timesheet...</LoadingText>
+        <ErrorText>Creating timesheet failed!</ErrorText>
+        </AsyncButton> *@
+        @* <button @onclick="Cancel" disabled="@disableButtons">Cancel</button> *@
     </Toolbar>
+    <Main>
+        <AsyncResource State="loadingState">
+            <ResourceContent>
+                <h2 class="pad center">Data</h2>
+                <div class="flex column gap">
+                    <label for="name">Name</label>
+                    <input id="name" @bind="timesheet!.Name">
+                    @* <label for="hourly-fee">Hourly fee</label>
+                    <input id="hourly-fee" @bind="timesheet.HourlyFee"> *@
+                </div>
+                <h2 class="center pad">Timesheets</h2>
+                @* <ListView Items="timesheet.Timesheets" Context="timesheet">
+                <ItemTemplate>
+                <NavLink href="@($"timesheets/{timesheet.Id}")">@timesheet.Name</NavLink>
+                </ItemTemplate>
+                <EmptyContent>
+                <p>Nothing to show here.</p>
+                <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
+                <ButtonText>Create timesheet</ButtonText>
+                <LoadingText>Creating timesheet...</LoadingText>
+                <ErrorText>Creating timesheet failed!</ErrorText>
+                </AsyncButton>
+                </EmptyContent>
+                </ListView> *@
+            </ResourceContent>
+            <LoadingText>Loading project...</LoadingText>
+            <ErrorText>Loading project failed!</ErrorText>
+        </AsyncResource>
+    </Main>
 </MainTemplate>
 
 @code {
-    AsyncResourceState LoadingState;
     Timesheet? timesheet;
+    AsyncResourceState loadingState;
+
+    [Parameter]
+    public int id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(2000);
-
+        try
+        {
+            timesheet = await http.GetFromJsonAsync<Timesheet>($"api/Timesheet/{id}", JSON_OPTIONS);
+            loadingState = AsyncResourceState.Success;
+        }
+        catch
+        {
+            loadingState = AsyncResourceState.Error;
+        }
     }
-}
 
+    void Cancel()
+    {
+        Back();
+    }
+
+    void Back() => nav.NavigateTo($"projects/{timesheet?.Id}");
+}

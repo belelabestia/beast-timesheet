@@ -1,6 +1,7 @@
 @using BeastTimesheet.Shared.Model
 @using BeastTimesheet.Shared
 @using BeastTimesheet.DesignSystem
+@using static BeastTimesheet.Shared.Config
 @page "/projects/{id:int}"
 @inject HttpClient http
 @inject NavigationManager nav
@@ -46,7 +47,7 @@
                 <h2 class="center pad">Timesheets</h2>
                 <ListView Items="project.Timesheets" Context="timesheet">
                     <ItemTemplate>
-                        <li class="pad">@timesheet.Name</li>
+                        <NavLink href="@($"timesheets/{timesheet.Id}")">@timesheet.Name</NavLink>
                     </ItemTemplate>
                     <EmptyContent>
                         <p>Nothing to show here.</p>
@@ -79,11 +80,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(2000);
-
         try
         {
-            project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", Config.JsonSerializerOptions);
+            project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", JSON_OPTIONS);
             loadingState = AsyncResourceState.Success;
         }
         catch
@@ -95,8 +94,6 @@
     async Task Save()
     {
         savingState = AsyncButtonState.Loading;
-
-        await Task.Delay(2000);
 
         try
         {
@@ -113,8 +110,6 @@
     async Task Delete()
     {
         deletingState = AsyncButtonState.Loading;
-
-        await Task.Delay(2000);
 
         try
         {
@@ -135,7 +130,7 @@
 
     async Task CreateTimesheet()
     {
-        await Task.Delay(2000);
+        throw new Exception("Method not implemented.");
     }
 
     void Back() => nav.NavigateTo("projects");

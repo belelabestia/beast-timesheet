@@ -3,6 +3,7 @@
 @using BeastTimesheet.Shared.Model
 @using BeastTimesheet.Shared
 @using BeastTimesheet.DesignSystem
+@using static BeastTimesheet.Shared.Config
 @inject HttpClient http
 @inject NavigationManager nav
 
@@ -48,11 +49,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(2000);
-
         try
         {
-            projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", Config.JsonSerializerOptions);
+            projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", JSON_OPTIONS);
             loadingState = AsyncResourceState.Success;
         }
         catch
@@ -64,8 +63,6 @@
     async Task Create()
     {
         creatingState = AsyncButtonState.Loading;
-
-        await Task.Delay(2000);
 
         try
         {

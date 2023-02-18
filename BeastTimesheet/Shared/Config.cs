@@ -5,7 +5,7 @@ namespace BeastTimesheet.Shared;
 
 public static class Config
 {
-    public static JsonSerializerOptions JsonSerializerOptions => new JsonSerializerOptions
+    public static JsonSerializerOptions JSON_OPTIONS => new JsonSerializerOptions
     {
         ReferenceHandler = ReferenceHandler.Preserve,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
