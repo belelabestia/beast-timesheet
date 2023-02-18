@@ -7,7 +7,7 @@
 
 <MainTemplate>
     <Header>
-        <AsyncResource State="LoadingState">
+        <AsyncResource State="loadingState">
             <ResourceContent>
                 Project #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))
             </ResourceContent>
@@ -16,25 +16,25 @@
         </AsyncResource>
     </Header>
     <Toolbar>
-        <AsyncButton OnClick="Save" State="SavingState" Disabled="DisableButtons">
+        <AsyncButton OnClick="Save" State="savingState" Disabled="disableButtons">
             <ButtonText>Save</ButtonText>
             <LoadingText>Saving...</LoadingText>
             <ErrorText>Saving failed!</ErrorText>
         </AsyncButton>
-        <AsyncButton OnClick="Delete" State="DeletingState" Disabled="DisableButtons">
+        <AsyncButton OnClick="Delete" State="deletingState" Disabled="disableButtons">
             <ButtonText>Delete</ButtonText>
             <LoadingText>Deleting...</LoadingText>
             <ErrorText>Deleting failed!</ErrorText>
         </AsyncButton>
-        <AsyncButton OnClick="CreateTimesheet" State="CreatingTimesheetState" Disabled="DisableButtons">
+        <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
             <ButtonText>Create timesheet</ButtonText>
             <LoadingText>Creating timesheet...</LoadingText>
             <ErrorText>Creating timesheet failed!</ErrorText>
         </AsyncButton>
-        <button @onclick="Cancel" disabled="@DisableButtons">Cancel</button>
+        <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
     </Toolbar>
     <Main>
-        <AsyncResource State="LoadingState">
+        <AsyncResource State="loadingState">
             <ResourceContent>
                 <h2 class="pad center">Data</h2>
                 <div class="flex column gap">
@@ -50,7 +50,7 @@
                     </ItemTemplate>
                     <EmptyContent>
                         <p>Nothing to show here.</p>
-                        <AsyncButton OnClick="CreateTimesheet" State="CreatingTimesheetState" Disabled="DisableButtons">
+                        <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
                             <ButtonText>Create timesheet</ButtonText>
                             <LoadingText>Creating timesheet...</LoadingText>
                             <ErrorText>Creating timesheet failed!</ErrorText>
@@ -66,11 +66,13 @@
 
 @code {
     Project? project;
-    AsyncResourceState LoadingState;
-    AsyncButtonState SavingState;
-    AsyncButtonState DeletingState;
-    AsyncButtonState CreatingTimesheetState;
-    bool DisableButtons => SavingState.Merge(DeletingState).Merge(CreatingTimesheetState) is not AsyncButtonState.Ready;
+    AsyncResourceState loadingState;
+    AsyncButtonState savingState;
+    AsyncButtonState deletingState;
+    AsyncButtonState creatingTimesheetState;
+    bool disableButtons =>
+    savingState.Merge(deletingState).Merge(creatingTimesheetState) is not AsyncButtonState.Ready ||
+    loadingState is not AsyncResourceState.Success;
 
     [Parameter]
     public int id { get; set; }
@@ -82,17 +84,17 @@
         try
         {
             project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", Config.JsonSerializerOptions);
-            LoadingState = AsyncResourceState.Success;
+            loadingState = AsyncResourceState.Success;
         }
         catch
         {
-            LoadingState = AsyncResourceState.Error;
+            loadingState = AsyncResourceState.Error;
         }
     }
 
     async Task Save()
     {
-        SavingState = AsyncButtonState.Loading;
+        savingState = AsyncButtonState.Loading;
 
         await Task.Delay(2000);
 
@@ -102,7 +104,7 @@
         }
         catch
         {
-            SavingState = AsyncButtonState.Error;
+            savingState = AsyncButtonState.Error;
         }
 
         Back();
@@ -110,7 +112,7 @@
 
     async Task Delete()
     {
-        DeletingState = AsyncButtonState.Loading;
+        deletingState = AsyncButtonState.Loading;
 
         await Task.Delay(2000);
 
@@ -120,7 +122,7 @@
         }
         catch
         {
-            DeletingState = AsyncButtonState.Error;
+            deletingState = AsyncButtonState.Error;
         }
 
         Back();

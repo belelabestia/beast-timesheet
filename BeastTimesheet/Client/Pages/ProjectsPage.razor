@@ -9,14 +9,14 @@
 <MainTemplate>
     <Header>Projects</Header>
     <Toolbar>
-        <AsyncButton OnClick="Create" State="CreatingState">
+        <AsyncButton OnClick="Create" State="creatingState">
             <ButtonText>Create project</ButtonText>
             <LoadingText>Creating...</LoadingText>
             <ErrorText>Creating failed!</ErrorText>
         </AsyncButton>
     </Toolbar>
     <Main>
-        <AsyncResource State="LoadingState">
+        <AsyncResource State="loadingState">
             <ResourceContent>
                 <ListView Items="projects" Context="project">
                     <ItemTemplate>
@@ -27,7 +27,7 @@
                     </ItemTemplate>
                     <EmptyContent>
                         <p>Nothing to show here.</p>
-                        <AsyncButton OnClick="Create" State="CreatingState">
+                        <AsyncButton OnClick="Create" State="creatingState">
                             <ButtonText>Create project</ButtonText>
                             <LoadingText>Creating...</LoadingText>
                             <ErrorText>Creating failed!</ErrorText>
@@ -43,8 +43,8 @@
 
 @code {
     IEnumerable<Project>? projects;
-    AsyncResourceState LoadingState;
-    AsyncButtonState CreatingState;
+    AsyncResourceState loadingState;
+    AsyncButtonState creatingState;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,17 +53,17 @@
         try
         {
             projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", Config.JsonSerializerOptions);
-            LoadingState = AsyncResourceState.Success;
+            loadingState = AsyncResourceState.Success;
         }
         catch
         {
-            LoadingState = AsyncResourceState.Error;
+            loadingState = AsyncResourceState.Error;
         }
     }
 
     async Task Create()
     {
-        CreatingState = AsyncButtonState.Loading;
+        creatingState = AsyncButtonState.Loading;
 
         await Task.Delay(2000);
 
@@ -75,7 +75,7 @@
         }
         catch
         {
-            CreatingState = AsyncButtonState.Error;
+            creatingState = AsyncButtonState.Error;
         }
     }
 }

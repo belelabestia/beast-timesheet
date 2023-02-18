@@ -1,4 +1,7 @@
+@using static BeastTimesheet.Shared.Config
 @namespace BeastTimesheet.DesignSystem
+@inject HttpClient http
+@inject Auth auth
 
 <header class="pad grid gap">
     <h1 class="center">@Header</h1>
@@ -9,8 +12,17 @@
         @Main
     </div>
 </main>
+<footer class="pad flex end gap">
+    <span>version @version</span>
+    @if (auth.Key is not null)
+    {
+        <button @onclick="Logout">Logout</button>
+    }
+</footer>
 
 @code {
+    string version = VERSION;
+
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     [Parameter]
@@ -19,4 +31,10 @@
     public RenderFragment? Main { get; set; }
     [Parameter]
     public RenderFragment? Toolbar { get; set; }
+
+    void Logout()
+    {
+        http.DefaultRequestHeaders.Remove("Key");
+        auth.Key = null;
+    }
 }
