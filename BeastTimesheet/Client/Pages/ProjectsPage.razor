@@ -9,13 +9,16 @@
 
 <MainTemplate>
     <Header>Projects</Header>
-    <Toolbar>
+    <Actions>
         <AsyncButton OnClick="Create" State="creatingState">
             <ButtonText>Create project</ButtonText>
             <LoadingText>Creating...</LoadingText>
             <ErrorText>Creating failed!</ErrorText>
         </AsyncButton>
-    </Toolbar>
+    </Actions>
+    <Links>
+        <NavLink href="timesheets">Timesheets</NavLink>
+    </Links>
     <Main>
         <AsyncResource State="loadingState">
             <ResourceContent>

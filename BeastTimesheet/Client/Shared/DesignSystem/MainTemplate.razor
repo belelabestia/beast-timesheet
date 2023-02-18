@@ -5,7 +5,10 @@
 
 <header class="pad grid gap">
     <h1 class="center">@Header</h1>
-    <nav class="flex end">@Toolbar</nav>
+    <nav class="grid gap">
+        <div class="flex end">@Actions</div>
+        <div class="flex end">@Links</div>
+    </nav>
 </header>
 <main class="fill grid">
     <div class="page pad flex column gap">
@@ -30,7 +33,9 @@
     [Parameter]
     public RenderFragment? Main { get; set; }
     [Parameter]
-    public RenderFragment? Toolbar { get; set; }
+    public RenderFragment? Actions { get; set; }
+    [Parameter]
+    public RenderFragment? Links { get; set; }
 
     void Logout()
     {

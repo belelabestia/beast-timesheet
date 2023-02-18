@@ -16,7 +16,7 @@
             <ErrorText>Ops!</ErrorText>
         </AsyncResource>
     </Header>
-    <Toolbar>
+    <Actions>
         <AsyncButton OnClick="Save" State="savingState" Disabled="disableButtons">
             <ButtonText>Save</ButtonText>
             <LoadingText>Saving...</LoadingText>
@@ -33,7 +33,7 @@
             <ErrorText>Creating timesheet failed!</ErrorText>
         </AsyncButton>
         <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
-    </Toolbar>
+    </Actions>
     <Main>
         <AsyncResource State="loadingState">
             <ResourceContent>
