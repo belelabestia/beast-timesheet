@@ -24,6 +24,7 @@ public class Timesheet
 public class Session
 {
     public int Id { get; set; }
+    public string Description { get; set; } = "";
     public DateOnly Date { get; set; }
     public TimeOnly StartTime { get; set; }
     public TimeOnly StopTime { get; set; }

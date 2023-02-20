@@ -53,9 +53,38 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<BeastTimesheetContext>();
 
+    var sessions = new List<Session>
+    {
+        new Session
+        {
+            Description = "Dev activity",
+            Date = new DateOnly(2022, 2, 3),
+            StartTime = new TimeOnly(8, 0),
+            StopTime = new TimeOnly(17, 0),
+            BreaksTime = new TimeSpan(1, 0, 0),
+        }
+    };
+
+    var timesheets = new List<Timesheet>
+    {
+        new Timesheet
+        {
+            Name = "2022-04 April",
+            State = TimesheetState.Open,
+            Sessions = sessions
+        }
+    };
+
+    var project = new Project
+    {
+        Name = "Test project",
+        HourlyFee = 25,
+        Timesheets = timesheets
+    };
+
     db.Database.Migrate();
     db.Projects!.ExecuteDelete();
-    db.Projects!.Add(new Project { Id = 1, Name = "Test project", HourlyFee = 25, Timesheets = new List<Timesheet> { new Timesheet { Name = "2022-04 April" } } });
+    db.Projects!.Add(project);
     db.SaveChanges();
 }
 

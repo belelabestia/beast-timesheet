@@ -79,6 +79,10 @@ namespace BeastTimesheet.Server.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time without time zone");
 
