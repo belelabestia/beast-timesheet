@@ -9,7 +9,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                Timesheet #@(id + " - " + (timesheet?.Name is null or "" ? "Draft" : timesheet!.Name))
+                #@(id + " - " + (timesheet?.Name is null or "" ? "Draft" : timesheet!.Name))
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
@@ -33,6 +33,9 @@
         </AsyncButton>
         <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
     </Actions>
+    <Links>
+        <NavLink href="@($"projects/{timesheet?.ProjectId}")">@timesheet?.Project?.Name</NavLink>
+    </Links>
     <Main>
         <AsyncResource State="loadingState">
             <ResourceContent>
