@@ -9,29 +9,29 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                Project #@(id + " - " + (timesheet?.Name is null or "" ? "Draft" : timesheet!.Name))
+                Timesheet #@(id + " - " + (timesheet?.Name is null or "" ? "Draft" : timesheet!.Name))
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
         </AsyncResource>
     </Header>
     <Actions>
-        @* <AsyncButton OnClick="Save" State="savingState" Disabled="disableButtons">
-        <ButtonText>Save</ButtonText>
-        <LoadingText>Saving...</LoadingText>
-        <ErrorText>Saving failed!</ErrorText>
+        <AsyncButton OnClick="Save" State="savingState" Disabled="disableButtons">
+            <ButtonText>Save</ButtonText>
+            <LoadingText>Saving...</LoadingText>
+            <ErrorText>Saving failed!</ErrorText>
         </AsyncButton>
         <AsyncButton OnClick="Delete" State="deletingState" Disabled="disableButtons">
-        <ButtonText>Delete</ButtonText>
-        <LoadingText>Deleting...</LoadingText>
-        <ErrorText>Deleting failed!</ErrorText>
+            <ButtonText>Delete</ButtonText>
+            <LoadingText>Deleting...</LoadingText>
+            <ErrorText>Deleting failed!</ErrorText>
         </AsyncButton>
-        <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
-        <ButtonText>Create timesheet</ButtonText>
-        <LoadingText>Creating timesheet...</LoadingText>
-        <ErrorText>Creating timesheet failed!</ErrorText>
-        </AsyncButton> *@
-        @* <button @onclick="Cancel" disabled="@disableButtons">Cancel</button> *@
+        <AsyncButton OnClick="CreateSession" State="creatingSessionState" Disabled="disableButtons">
+            <ButtonText>Create session</ButtonText>
+            <LoadingText>Creating session...</LoadingText>
+            <ErrorText>Creating session failed!</ErrorText>
+        </AsyncButton>
+        <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
     </Actions>
     <Main>
         <AsyncResource State="loadingState">
@@ -44,19 +44,81 @@
                     <input id="hourly-fee" @bind="timesheet.HourlyFee"> *@
                 </div>
                 <h2 class="center pad">Timesheets</h2>
-                @* <ListView Items="timesheet.Timesheets" Context="timesheet">
-                <ItemTemplate>
-                <NavLink href="@($"timesheets/{timesheet.Id}")">@timesheet.Name</NavLink>
-                </ItemTemplate>
-                <EmptyContent>
-                <p>Nothing to show here.</p>
-                <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
-                <ButtonText>Create timesheet</ButtonText>
-                <LoadingText>Creating timesheet...</LoadingText>
-                <ErrorText>Creating timesheet failed!</ErrorText>
-                </AsyncButton>
-                </EmptyContent>
-                </ListView> *@
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start time</th>
+                            <th>Stop time</th>
+                            <th>Breaks time</th>
+                            <th>Gross time</th>
+                            <th>Net time</th>
+                            <th>Session fee</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <AsyncResource State="loadingState">
+                            <ResourceContent>
+                                @foreach (var session in timesheet?.Sessions ?? Enumerable.Empty<Session>())
+                                {
+                                         <tr>
+                                            <td>
+                                                <input @bind="session.Date">
+                                            </td>
+                                            <td>
+                                                <input @bind="session.StartTime">
+                                            </td>
+                                            <td>
+                                                <input @bind="session.StopTime">
+                                            </td>
+                                            <td>
+                                                <input @bind="session.BreaksTime">
+                                            </td>
+                                            <td>
+                                                @session.GrossTime
+                                            </td>
+                                            <td>
+                                                @session.NetTime
+                                            </td>
+                                            <td>
+                                                @session.SessionFee
+                                            </td>
+                                            <td>
+                                                <AsyncButton OnClick="@(() => SaveSession(session))" State="savingSessionState"
+                                                    Disabled="disableButtons">
+                                                    <ButtonText>Save session</ButtonText>
+                                                    <LoadingText>Saving session...</LoadingText>
+                                                    <ErrorText>Saving session failed!</ErrorText>
+                                                </AsyncButton>
+                                                <AsyncButton OnClick="@(() => DeleteSession(session))" State="deletingSessionState"
+                                                    Disabled="disableButtons">
+                                                    <ButtonText>Delete session</ButtonText>
+                                                    <LoadingText>Deleting session...</LoadingText>
+                                                    <ErrorText>Deleting session failed!</ErrorText>
+                                                </AsyncButton>
+                                            </td>
+                                        </tr>
+                                }
+                                <ListView Items="timesheet.Sessions" Context="session">
+                                    <ItemTemplate>
+                                   
+                                    </ItemTemplate>
+                                    <EmptyContent>
+                                        <p>Nothing to show here.</p>
+                                        <AsyncButton OnClick="CreateSession" State="creatingSessionState" Disabled="disableButtons">
+                                            <ButtonText>Create session</ButtonText>
+                                            <LoadingText>Creating session...</LoadingText>
+                                            <ErrorText>Creating session failed!</ErrorText>
+                                        </AsyncButton>
+                                    </EmptyContent>
+                                </ListView>
+                            </ResourceContent>
+                            <LoadingText>Loading sessions...</LoadingText>
+                            <ErrorText>Loading sessions failed!</ErrorText>
+                        </AsyncResource>
+                    </tbody>
+                </table>
             </ResourceContent>
             <LoadingText>Loading project...</LoadingText>
             <ErrorText>Loading project failed!</ErrorText>
@@ -67,12 +129,22 @@
 @code {
     Timesheet? timesheet;
     AsyncResourceState loadingState;
+    AsyncButtonState savingState;
+    AsyncButtonState deletingState;
+    AsyncButtonState creatingSessionState;
+    AsyncButtonState savingSessionState;
+    AsyncButtonState deletingSessionState;
+    bool disableButtons =>
+    savingState.Merge(deletingState).Merge(creatingSessionState).Merge(savingSessionState).Merge(deletingSessionState) is
+    not AsyncButtonState.Ready || loadingState is not AsyncResourceState.Success;
 
     [Parameter]
     public int id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        loadingState = AsyncResourceState.Loading;
+
         try
         {
             timesheet = await http.GetFromJsonAsync<Timesheet>($"api/Timesheet/{id}", JSON_OPTIONS);
@@ -84,10 +156,90 @@
         }
     }
 
+    async Task Save()
+    {
+        savingState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.PutAsJsonAsync($"api/Timesheet/{id}", timesheet, JSON_OPTIONS);
+        }
+        catch
+        {
+            savingState = AsyncButtonState.Error;
+        }
+
+        Back();
+    }
+
+    async Task Delete()
+    {
+        deletingState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.DeleteAsync($"api/Timesheet/{id}");
+        }
+        catch
+        {
+            deletingState = AsyncButtonState.Error;
+        }
+
+        Back();
+    }
+
+    async Task CreateSession()
+    {
+        creatingSessionState = AsyncButtonState.Loading;
+
+        try
+        {
+            var res = await http.PostAsJsonAsync("api/Session", new Session { TimesheetId = timesheet!.Id });
+            creatingSessionState = AsyncButtonState.Ready;
+            await OnInitializedAsync();
+        }
+        catch
+        {
+            creatingSessionState = AsyncButtonState.Error;
+        }
+    }
+
+    async Task SaveSession(Session session)
+    {
+        savingSessionState = AsyncButtonState.Loading;
+
+        try
+        {
+            var res = await http.PutAsJsonAsync($"api/Session/{session!.Id}", session, JSON_OPTIONS);
+            savingSessionState = AsyncButtonState.Ready;
+            await OnInitializedAsync();
+        }
+        catch
+        {
+            savingSessionState = AsyncButtonState.Error;
+        }
+    }
+
+    async Task DeleteSession(Session session)
+    {
+        deletingSessionState = AsyncButtonState.Loading;
+
+        try
+        {
+            var res = await http.DeleteAsync($"api/Session/{session.Id}");
+            deletingSessionState = AsyncButtonState.Ready;
+            await OnInitializedAsync();
+        }
+        catch
+        {
+            deletingSessionState = AsyncButtonState.Error;
+        }
+    }
+
     void Cancel()
     {
         Back();
     }
 
-    void Back() => nav.NavigateTo($"projects/{timesheet?.Id}");
+    void Back() => nav.NavigateTo($"projects/{timesheet?.ProjectId}");
 }

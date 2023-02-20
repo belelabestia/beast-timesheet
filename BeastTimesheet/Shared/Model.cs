@@ -30,7 +30,7 @@ public class Session
     public TimeSpan BreaksTime { get; set; }
     public TimeSpan GrossTime => StopTime - StartTime;
     public TimeSpan NetTime => GrossTime - BreaksTime;
-    public Decimal SessionFee => Convert.ToDecimal(NetTime.TotalHours) * Timesheet!.Project!.HourlyFee;
+    public Decimal SessionFee => Convert.ToDecimal(NetTime.TotalHours) * Timesheet?.Project?.HourlyFee ?? 0;
     public int TimesheetId { get; set; }
     public Timesheet? Timesheet { get; set; }
 }

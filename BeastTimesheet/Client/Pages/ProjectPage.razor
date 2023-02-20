@@ -1,5 +1,4 @@
 @using BeastTimesheet.Shared.Model
-@using BeastTimesheet.Shared
 @using BeastTimesheet.DesignSystem
 @using static BeastTimesheet.Shared.Config
 @page "/projects/{id:int}"
@@ -10,7 +9,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                Project #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))
+                #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
@@ -82,7 +81,7 @@
     {
         try
         {
-            project = await http.GetFromJsonAsync<Project>($"api/Projects/{id}", JSON_OPTIONS);
+            project = await http.GetFromJsonAsync<Project>($"api/Project/{id}", JSON_OPTIONS);
             loadingState = AsyncResourceState.Success;
         }
         catch
@@ -97,7 +96,7 @@
 
         try
         {
-            await http.PutAsJsonAsync($"api/projects/{id}", project);
+            await http.PutAsJsonAsync($"api/Project/{id}", project, JSON_OPTIONS);
         }
         catch
         {
@@ -113,7 +112,7 @@
 
         try
         {
-            await http.DeleteAsync($"api/projects/{id}");
+            await http.DeleteAsync($"api/Project/{id}");
         }
         catch
         {
@@ -130,7 +129,18 @@
 
     async Task CreateTimesheet()
     {
-        throw new Exception("Method not implemented.");
+        creatingTimesheetState = AsyncButtonState.Loading;
+
+        try
+        {
+            var res = await http.PostAsJsonAsync("api/Timesheet", new Timesheet { ProjectId = project!.Id });
+            var timesheet = await res.Content.ReadFromJsonAsync<Timesheet>();
+            nav.NavigateTo($"timesheets/{timesheet!.Id}");
+        }
+        catch
+        {
+            creatingTimesheetState = AsyncButtonState.Error;
+        }
     }
 
     void Back() => nav.NavigateTo("projects");

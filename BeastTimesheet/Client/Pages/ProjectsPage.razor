@@ -54,7 +54,7 @@
     {
         try
         {
-            projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Projects", JSON_OPTIONS);
+            projects = await http.GetFromJsonAsync<IEnumerable<Project>>("api/Project", JSON_OPTIONS);
             loadingState = AsyncResourceState.Success;
         }
         catch
@@ -69,7 +69,7 @@
 
         try
         {
-            var res = await http.PostAsJsonAsync("api/Projects", new Project());
+            var res = await http.PostAsJsonAsync("api/Project", new Project());
             var project = await res.Content.ReadFromJsonAsync<Project>();
             nav.NavigateTo($"projects/{project!.Id}");
         }

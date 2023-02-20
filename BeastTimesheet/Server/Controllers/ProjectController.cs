@@ -6,11 +6,11 @@ namespace BeastTimesheet.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProjectsController : ControllerBase
+public class ProjectController : ControllerBase
 {
     private readonly BeastTimesheetContext _context;
 
-    public ProjectsController(BeastTimesheetContext context)
+    public ProjectController(BeastTimesheetContext context)
     {
         _context = context;
     }
