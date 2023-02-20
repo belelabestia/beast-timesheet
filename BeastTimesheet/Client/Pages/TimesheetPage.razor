@@ -34,6 +34,7 @@
         <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
     </Actions>
     <Links>
+        <NavLink href="projects">Projects</NavLink>
         <NavLink href="@($"projects/{timesheet?.ProjectId}")">@timesheet?.Project?.Name</NavLink>
     </Links>
     <Main>
