@@ -15,6 +15,12 @@ public class SessionController : ControllerBase
         _context = context;
     }
 
+    [HttpGet("{id:int}")]
+    public Session? GetSession(int id)
+    {
+        return _context.Sessions!.Include(s => s.Timesheet).ThenInclude(t => t!.Project).SingleOrDefault(s => s.Id == id);
+    }
+
     [HttpPost]
     public Session CreateSession(Session session)
     {

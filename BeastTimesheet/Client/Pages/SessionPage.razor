@@ -1,0 +1,146 @@
+@using BeastTimesheet.DesignSystem
+@using BeastTimesheet.Shared.Model
+@using static BeastTimesheet.Shared.Config
+@page "/sessions/{id:int}"
+@inject HttpClient http
+@inject NavigationManager nav
+
+<MainTemplate>
+    <Header>
+        <AsyncResource State="loadingState">
+            <ResourceContent>
+                #@(id + " - " + (session?.Description is null or "" ? "Draft" : session!.Description))
+            </ResourceContent>
+            <LoadingText>...</LoadingText>
+            <ErrorText>Ops!</ErrorText>
+        </AsyncResource>
+    </Header>
+    <Actions>
+        <AsyncButton OnClick="Save" State="savingState" Disabled="disableButtons">
+            <ButtonText>Save</ButtonText>
+            <LoadingText>Saving...</LoadingText>
+            <ErrorText>Saving failed!</ErrorText>
+        </AsyncButton>
+        <AsyncButton OnClick="Delete" State="deletingState" Disabled="disableButtons">
+            <ButtonText>Delete</ButtonText>
+            <LoadingText>Deleting...</LoadingText>
+            <ErrorText>Deleting failed!</ErrorText>
+        </AsyncButton>
+        <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
+    </Actions>
+    <Links>
+        <NavLink href="@($"timesheets/{session?.TimesheetId}")">@session?.Timesheet?.Name</NavLink>
+    </Links>
+    <Main>
+        <AsyncResource State="loadingState">
+            <ResourceContent>
+                <h2 class="pad center">Data</h2>
+                <div class="flex column gap">
+                    <label for="description">Description</label>
+                    <input id="description" @bind="session!.Description">
+                    <label for="date">Date</label>
+                    <input id="date" type="date" @bind="session!.Date">
+                    <label for="start-time">Start time</label>
+                    <input id="start-time" type="time" @bind="session!.StartTime">
+                    <label for="stop-time">Stop time</label>
+                    <input id="stop-time" type="time" @bind="session!.StopTime">
+                    <label for="breaks-time">Breaks time</label>
+                    <input id="breaks-time" type="time" @bind="BreaksTime">
+                    <div class="grid row gap">
+                        <div class="grid gap">
+                            <label>Gross time</label>
+                            <input readonly value="@session!.GrossTime" class="full">
+                        </div>
+                        <div class="grid gap">
+                            <label>Net time</label>
+                            <input readonly value="@session!.NetTime" class="full">
+                        </div>
+                        <div class="grid gap">
+                            <label>Session fee</label>
+                            <input readonly value="@session!.SessionFee" class="full">
+                        </div>
+                    </div>
+                </div>
+            </ResourceContent>
+            <LoadingText>Loading session...</LoadingText>
+            <ErrorText>Loading session failed!</ErrorText>
+        </AsyncResource>
+    </Main>
+</MainTemplate>
+
+@code {
+    Session? session;
+    AsyncResourceState loadingState;
+    AsyncButtonState savingState;
+    AsyncButtonState deletingState;
+    bool disableButtons =>
+    savingState.Merge(deletingState).Merge(deletingState) is not AsyncButtonState.Ready
+    || loadingState is not AsyncResourceState.Success;
+
+    [Parameter]
+    public int id { get; set; }
+
+    private TimeOnly BreaksTime
+    {
+        get => TimeOnly.FromTimeSpan(session!.BreaksTime);
+        set
+        {
+            session!.BreaksTime = value.ToTimeSpan();
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        loadingState = AsyncResourceState.Loading;
+
+        try
+        {
+            session = await http.GetFromJsonAsync<Session>($"api/Session/{id}", JSON_OPTIONS);
+            loadingState = AsyncResourceState.Success;
+        }
+        catch
+        {
+            loadingState = AsyncResourceState.Error;
+        }
+    }
+
+    async Task Save()
+    {
+        savingState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.PutAsJsonAsync($"api/Session/{id}", session, JSON_OPTIONS);
+        }
+        catch
+        {
+            savingState = AsyncButtonState.Error;
+        }
+
+        Back();
+    }
+
+    async Task Delete()
+    {
+        deletingState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.DeleteAsync($"api/Session/{id}");
+        }
+        catch
+        {
+            deletingState = AsyncButtonState.Error;
+        }
+
+        Back();
+    }
+
+    void Cancel()
+    {
+        Back();
+    }
+
+    void Back() => nav.NavigateTo($"timesheets/{session?.TimesheetId}");
+}
