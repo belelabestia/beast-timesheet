@@ -148,44 +148,12 @@
         try
         {
             var res = await http.PostAsJsonAsync("api/Session", new Session { TimesheetId = timesheet!.Id });
-            addingSessionState = AsyncButtonState.Ready;
-            await OnInitializedAsync();
+            var session = await res.Content.ReadFromJsonAsync<Session>();
+            nav.NavigateTo($"sessions/{session!.Id}");
         }
         catch
         {
             addingSessionState = AsyncButtonState.Error;
-        }
-    }
-
-    async Task SaveSession(Session session)
-    {
-        savingSessionState = AsyncButtonState.Loading;
-
-        try
-        {
-            var res = await http.PutAsJsonAsync($"api/Session/{session!.Id}", session, JSON_OPTIONS);
-            savingSessionState = AsyncButtonState.Ready;
-            await OnInitializedAsync();
-        }
-        catch
-        {
-            savingSessionState = AsyncButtonState.Error;
-        }
-    }
-
-    async Task DeleteSession(Session session)
-    {
-        deletingSessionState = AsyncButtonState.Loading;
-
-        try
-        {
-            var res = await http.DeleteAsync($"api/Session/{session.Id}");
-            deletingSessionState = AsyncButtonState.Ready;
-            await OnInitializedAsync();
-        }
-        catch
-        {
-            deletingSessionState = AsyncButtonState.Error;
         }
     }
 
