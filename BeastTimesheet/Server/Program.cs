@@ -52,54 +52,7 @@ app.MapFallbackToFile("index.html");
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<BeastTimesheetContext>();
-
-    var sessions = new List<Session>
-    {
-        new Session
-        {
-            Description = "Dev activity",
-            Date = new DateOnly(2022, 2, 3),
-            StartTime = new TimeOnly(8, 0),
-            StopTime = new TimeOnly(17, 0),
-            BreaksTime = new TimeSpan(1, 0, 0),
-        },
-        new Session
-        {
-            Description = "Deploy stuff",
-            Date = new DateOnly(2022, 2, 4),
-            StartTime = new TimeOnly(8, 0),
-            StopTime = new TimeOnly(18, 15),
-            BreaksTime = new TimeSpan(1, 30, 0),
-        }
-    };
-
-    var bill = new Bill
-    {
-        ExpirationDate = DateOnly.FromDateTime(DateTime.Now + TimeSpan.FromDays(30))
-    };
-
-    var timesheets = new List<Timesheet>
-    {
-        new Timesheet
-        {
-            Name = "2022-04 April",
-            State = TimesheetState.Open,
-            Bill = bill,
-            Sessions = sessions,
-        }
-    };
-
-    var project = new Project
-    {
-        Name = "Test project",
-        HourlyFee = 25,
-        Timesheets = timesheets
-    };
-
     db.Database.Migrate();
-    db.Projects!.ExecuteDelete();
-    db.Projects!.Add(project);
-    db.SaveChanges();
 }
 
 app.Run();
