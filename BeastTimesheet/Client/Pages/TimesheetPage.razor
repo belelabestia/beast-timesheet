@@ -31,6 +31,22 @@
             <LoadingText>Adding session...</LoadingText>
             <ErrorText>Adding session failed!</ErrorText>
         </AsyncButton>
+        @if (timesheet!.Bill is null)
+        {
+            <AsyncButton OnClick="CreateBill" State="creatingBillState" Disabled="disableButtons">
+                <ButtonText>Create bill</ButtonText>
+                <LoadingText>Creating bill...</LoadingText>
+                <ErrorText>Creating bill failed!</ErrorText>
+            </AsyncButton>
+        }
+        else
+        {
+            <AsyncButton OnClick="DeleteBill" State="deletingBillState" Disabled="disableButtons">
+                <ButtonText>Delete bill</ButtonText>
+                <LoadingText>Deleting bill...</LoadingText>
+                <ErrorText>Deleting bill failed!</ErrorText>
+            </AsyncButton>
+        }
         <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
     </Actions>
     <Links>
@@ -134,6 +150,7 @@
     AsyncButtonState savingSessionState;
     AsyncButtonState deletingSessionState;
     AsyncButtonState creatingBillState;
+    AsyncButtonState deletingBillState;
     bool disableButtons =>
     savingState.Merge(deletingState).Merge(addingSessionState).Merge(savingSessionState).Merge(deletingSessionState) is
     not AsyncButtonState.Ready || loadingState is not AsyncResourceState.Success;
@@ -218,6 +235,22 @@
         catch
         {
             creatingBillState = AsyncButtonState.Error;
+        }
+    }
+
+    async Task DeleteBill()
+    {
+        deletingBillState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.DeleteAsync($"api/Bill/{timesheet!.Id}");
+            deletingBillState = AsyncButtonState.Ready;
+            await OnInitializedAsync();
+        }
+        catch
+        {
+            deletingBillState = AsyncButtonState.Error;
         }
     }
 
