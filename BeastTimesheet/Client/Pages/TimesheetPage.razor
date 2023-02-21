@@ -54,7 +54,7 @@
                 <div class="flex column gap">
                     <div class="grid gap">
                         <label>Name</label>
-                        <input readonly value="@timesheet!.Bill!.Name">
+                        <p>@timesheet!.Bill!.Name</p>
                     </div>
                     <label for="expiration-date">Expiration date</label>
                     <input id="expiration-date" type="date" @bind="timesheet!.Bill!.ExpirationDate">
@@ -63,15 +63,22 @@
                     <div class="grid row gap">
                         <div class="grid gap">
                             <label>Expired</label>
-                            <input readonly type="checkbox" value="@timesheet!.Bill!.Expired">
+                            @if (timesheet!.Bill!.Expired)
+                            {
+                                <p class="center">&check;</p>
+                            }
+                            else
+                            {
+                                <p class="center">&cross;</p>
+                            }
                         </div>
                         <div class="grid gap">
                             <label>Total time</label>
-                            <input readonly type="datetime" value="@timesheet!.Bill!.TotalTime">
+                            <p>@timesheet!.Bill!.TotalTime</p>
                         </div>
                         <div class="grid gap">
                             <label>Total fee</label>
-                            <input readonly value="@timesheet!.Bill!.TotalFee">
+                            <p>@timesheet!.Bill!.TotalFee</p>
                         </div>
                     </div>
                 </div>
@@ -83,6 +90,7 @@
                                 <NavLink href="@($"sessions/{session.Id}")">
                                     @session.Date -
                                     @(session.Description is not "" ? session.Description : "Draft - #" + session.Id)
+                                    (@session.NetTime | @session.SessionFee)
                                 </NavLink>
                             </ItemTemplate>
                             <EmptyContent>
