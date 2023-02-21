@@ -31,7 +31,7 @@
             <LoadingText>Adding session...</LoadingText>
             <ErrorText>Adding session failed!</ErrorText>
         </AsyncButton>
-        @if (timesheet!.Bill is null)
+        @if (timesheet?.Bill is null)
         {
             <AsyncButton OnClick="CreateBill" State="creatingBillState" Disabled="disableButtons">
                 <ButtonText>Create bill</ButtonText>
@@ -72,16 +72,16 @@
                         <div class="flex column gap">
                             <div class="grid gap">
                                 <label>Name</label>
-                                <p>@timesheet!.Bill!.Name</p>
+                                <p>@bill.Name</p>
                             </div>
                             <label for="expiration-date">Expiration date</label>
-                            <input id="expiration-date" type="date" @bind="timesheet!.Bill!.ExpirationDate">
+                            <input id="expiration-date" type="date" @bind="bill.ExpirationDate">
                             <label for="payed">Payed</label>
-                            <input id="payed" type="checkbox" @bind="timesheet!.Bill!.Payed">
+                            <input id="payed" type="checkbox" @bind="bill.Payed">
                             <div class="grid row gap">
                                 <div class="grid gap">
                                     <label>Expired</label>
-                                    @if (timesheet!.Bill!.Expired)
+                                    @if (bill.Expired)
                                     {
                                         <p class="center">&check;</p>
                                     }
@@ -92,11 +92,11 @@
                                 </div>
                                 <div class="grid gap">
                                     <label>Total time</label>
-                                    <p>@timesheet!.Bill!.TotalTime</p>
+                                    <p>@bill.TotalTime</p>
                                 </div>
                                 <div class="grid gap">
                                     <label>Total fee</label>
-                                    <p>@timesheet!.Bill!.TotalFee</p>
+                                    <p>@bill.TotalFee</p>
                                 </div>
                             </div>
                         </div>
@@ -147,14 +147,21 @@
     AsyncButtonState savingState;
     AsyncButtonState deletingState;
     AsyncButtonState addingSessionState;
-    AsyncButtonState savingSessionState;
-    AsyncButtonState deletingSessionState;
     AsyncButtonState creatingBillState;
     AsyncButtonState deletingBillState;
+
     bool disableButtons =>
-    savingState.Merge(deletingState).Merge(addingSessionState).Merge(savingSessionState).Merge(deletingSessionState) is
-    not AsyncButtonState.Ready || loadingState is not AsyncResourceState.Success;
-    IEnumerable<Bill> Bills => Enumerable.Empty<Bill>().Append(timesheet!.Bill!).Where(b => b is not null);
+    savingState
+    .Merge(deletingState)
+    .Merge(addingSessionState)
+    .Merge(creatingBillState)
+    .Merge(deletingBillState) is not AsyncButtonState.Ready ||
+    loadingState is not AsyncResourceState.Success;
+
+    IEnumerable<Bill> Bills =>
+    Enumerable.Empty<Bill>()
+    .Append(timesheet!.Bill!)
+    .Where(b => b is not null);
 
     [Parameter]
     public int id { get; set; }
