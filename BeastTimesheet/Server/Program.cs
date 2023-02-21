@@ -75,7 +75,7 @@ using (var scope = app.Services.CreateScope())
 
     var bill = new Bill
     {
-        ExpirationDate = DateTime.Now + TimeSpan.FromDays(30)
+        ExpirationDate = DateOnly.FromDateTime(DateTime.Now + TimeSpan.FromDays(30))
     };
 
     var timesheets = new List<Timesheet>

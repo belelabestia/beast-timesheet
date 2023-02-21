@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeastTimesheet.Server.Migrations
 {
     [DbContext(typeof(BeastTimesheetContext))]
-    [Migration("20230221104011_StartOver")]
+    [Migration("20230221111319_StartOver")]
     partial class StartOver
     {
         /// <inheritdoc />
@@ -32,8 +32,8 @@ namespace BeastTimesheet.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("ExpirationDate")
+                        .HasColumnType("date");
 
                     b.Property<bool>("Payed")
                         .HasColumnType("boolean");

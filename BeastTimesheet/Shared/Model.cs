@@ -42,12 +42,12 @@ public enum BillState { Emitted, Payed, Expired }
 public class Bill
 {
     public int Id { get; set; }
-    public DateTime ExpirationDate { get; set; }
+    public DateOnly ExpirationDate { get; set; }
     public bool Payed { get; set; }
     public int TimesheetId { get; set; }
     public Timesheet? Timesheet { get; set; }
     public Project? Project => Timesheet?.Project;
-    public bool Expired => DateTime.Now > ExpirationDate;
+    public bool Expired => DateOnly.FromDateTime(DateTime.Now) > ExpirationDate;
     public string Name => Project?.Name is null || Timesheet?.Name is null ? "" : $"{Project.Name} - {Timesheet.Name}";
     public TimeSpan TotalTime => Timesheet?.Sessions?.Select(s => s.NetTime).Aggregate(TimeSpan.Zero, (acc, next) => acc + next) ?? TimeSpan.Zero;
     public Decimal TotalFee => Timesheet?.Sessions?.Select(s => s.SessionFee).Sum() ?? decimal.Zero;

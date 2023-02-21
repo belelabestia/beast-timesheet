@@ -29,8 +29,8 @@ namespace BeastTimesheet.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("ExpirationDate")
+                        .HasColumnType("date");
 
                     b.Property<bool>("Payed")
                         .HasColumnType("boolean");

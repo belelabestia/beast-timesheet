@@ -50,7 +50,32 @@
                         <option value="@TimesheetState.Closed">Closed</option>
                     </select>
                 </div>
-                <h2 class="center pad">Sessions</h2>
+                <h2 class="pad center">Bill data</h2>
+                <div class="flex column gap">
+                    <div class="grid gap">
+                        <label>Name</label>
+                        <input readonly value="@timesheet!.Bill!.Name">
+                    </div>
+                    <label for="expiration-date">Expiration date</label>
+                    <input id="expiration-date" type="date" @bind="timesheet!.Bill!.ExpirationDate">
+                    <label for="payed">Payed</label>
+                    <input id="payed" type="checkbox" @bind="timesheet!.Bill!.Payed">
+                    <div class="grid row gap">
+                        <div class="grid gap">
+                            <label>Expired</label>
+                            <input readonly type="checkbox" value="@timesheet!.Bill!.Expired">
+                        </div>
+                        <div class="grid gap">
+                            <label>Total time</label>
+                            <input readonly type="datetime" value="@timesheet!.Bill!.TotalTime">
+                        </div>
+                        <div class="grid gap">
+                            <label>Total fee</label>
+                            <input readonly value="@timesheet!.Bill!.TotalFee">
+                        </div>
+                    </div>
+                </div>
+                <h2 class="pad center">Sessions</h2>
                 <AsyncResource State="loadingState">
                     <ResourceContent>
                         <ListView Items="timesheet?.Sessions" Context="session">

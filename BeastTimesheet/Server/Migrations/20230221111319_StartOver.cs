@@ -53,7 +53,7 @@ namespace BeastTimesheet.Server.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ExpirationDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Payed = table.Column<bool>(type: "boolean", nullable: false),
                     TimesheetId = table.Column<int>(type: "integer", nullable: false),
                     ProjectId = table.Column<int>(type: "integer", nullable: true)
