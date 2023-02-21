@@ -99,3 +99,12 @@ All entities can also be archived (soft remove) or deleted (hard remove).
 > And something similar can be done for the bills.
 
 The _bills_ view should be optionally by project or global, so I can just have a fast report of all my bills.
+
+## Known issues
+
+- in project page, nameless timesheet must display Draft - #id
+- in project page, create timesheet must save project before navigating
+- in timesheet page, breadcrumb must show Draft on nameless project
+- in session page, breadcrumb see above
+- in session page, date must be init to today
+- in timesheet page, bill date must be init to today
