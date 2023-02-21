@@ -27,27 +27,6 @@ namespace BeastTimesheet.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bills",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Payed = table.Column<bool>(type: "boolean", nullable: false),
-                    ProjectId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bills", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bills_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Timesheets",
                 columns: table => new
                 {
@@ -64,6 +43,33 @@ namespace BeastTimesheet.Server.Migrations
                         name: "FK_Timesheets_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Payed = table.Column<bool>(type: "boolean", nullable: false),
+                    TimesheetId = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bills", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bills_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Bills_Timesheets_TimesheetId",
+                        column: x => x.TimesheetId,
+                        principalTable: "Timesheets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -96,6 +102,12 @@ namespace BeastTimesheet.Server.Migrations
                 name: "IX_Bills_ProjectId",
                 table: "Bills",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bills_TimesheetId",
+                table: "Bills",
+                column: "TimesheetId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sessions_TimesheetId",

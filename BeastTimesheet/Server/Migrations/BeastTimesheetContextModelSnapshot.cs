@@ -35,12 +35,18 @@ namespace BeastTimesheet.Server.Migrations
                     b.Property<bool>("Payed")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TimesheetId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("TimesheetId")
+                        .IsUnique();
 
                     b.ToTable("Bills");
                 });
@@ -126,13 +132,17 @@ namespace BeastTimesheet.Server.Migrations
 
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Bill", b =>
                 {
-                    b.HasOne("BeastTimesheet.Shared.Model.Project", "Project")
+                    b.HasOne("BeastTimesheet.Shared.Model.Project", null)
                         .WithMany("Bills")
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("ProjectId");
+
+                    b.HasOne("BeastTimesheet.Shared.Model.Timesheet", "Timesheet")
+                        .WithOne("Bill")
+                        .HasForeignKey("BeastTimesheet.Shared.Model.Bill", "TimesheetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Project");
+                    b.Navigation("Timesheet");
                 });
 
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Session", b =>
@@ -166,6 +176,8 @@ namespace BeastTimesheet.Server.Migrations
 
             modelBuilder.Entity("BeastTimesheet.Shared.Model.Timesheet", b =>
                 {
+                    b.Navigation("Bill");
+
                     b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618

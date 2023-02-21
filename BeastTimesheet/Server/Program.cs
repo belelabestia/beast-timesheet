@@ -62,7 +62,20 @@ using (var scope = app.Services.CreateScope())
             StartTime = new TimeOnly(8, 0),
             StopTime = new TimeOnly(17, 0),
             BreaksTime = new TimeSpan(1, 0, 0),
+        },
+        new Session
+        {
+            Description = "Deploy stuff",
+            Date = new DateOnly(2022, 2, 4),
+            StartTime = new TimeOnly(8, 0),
+            StopTime = new TimeOnly(18, 15),
+            BreaksTime = new TimeSpan(1, 30, 0),
         }
+    };
+
+    var bill = new Bill
+    {
+        ExpirationDate = DateTime.Now + TimeSpan.FromDays(30)
     };
 
     var timesheets = new List<Timesheet>
@@ -71,7 +84,8 @@ using (var scope = app.Services.CreateScope())
         {
             Name = "2022-04 April",
             State = TimesheetState.Open,
-            Sessions = sessions
+            Bill = bill,
+            Sessions = sessions,
         }
     };
 
