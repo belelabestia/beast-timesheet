@@ -51,37 +51,49 @@
                     </select>
                 </div>
                 <h2 class="pad center">Bill data</h2>
-                <div class="flex column gap">
-                    <div class="grid gap">
-                        <label>Name</label>
-                        <p>@timesheet!.Bill!.Name</p>
-                    </div>
-                    <label for="expiration-date">Expiration date</label>
-                    <input id="expiration-date" type="date" @bind="timesheet!.Bill!.ExpirationDate">
-                    <label for="payed">Payed</label>
-                    <input id="payed" type="checkbox" @bind="timesheet!.Bill!.Payed">
-                    <div class="grid row gap">
-                        <div class="grid gap">
-                            <label>Expired</label>
-                            @if (timesheet!.Bill!.Expired)
-                            {
-                                <p class="center">&check;</p>
-                            }
-                            else
-                            {
-                                <p class="center">&cross;</p>
-                            }
+                <ListView Items="Bills" Context="bill">
+                    <ItemTemplate>
+                        <div class="flex column gap">
+                            <div class="grid gap">
+                                <label>Name</label>
+                                <p>@timesheet!.Bill!.Name</p>
+                            </div>
+                            <label for="expiration-date">Expiration date</label>
+                            <input id="expiration-date" type="date" @bind="timesheet!.Bill!.ExpirationDate">
+                            <label for="payed">Payed</label>
+                            <input id="payed" type="checkbox" @bind="timesheet!.Bill!.Payed">
+                            <div class="grid row gap">
+                                <div class="grid gap">
+                                    <label>Expired</label>
+                                    @if (timesheet!.Bill!.Expired)
+                                    {
+                                        <p class="center">&check;</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="center">&cross;</p>
+                                    }
+                                </div>
+                                <div class="grid gap">
+                                    <label>Total time</label>
+                                    <p>@timesheet!.Bill!.TotalTime</p>
+                                </div>
+                                <div class="grid gap">
+                                    <label>Total fee</label>
+                                    <p>@timesheet!.Bill!.TotalFee</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="grid gap">
-                            <label>Total time</label>
-                            <p>@timesheet!.Bill!.TotalTime</p>
-                        </div>
-                        <div class="grid gap">
-                            <label>Total fee</label>
-                            <p>@timesheet!.Bill!.TotalFee</p>
-                        </div>
-                    </div>
-                </div>
+                    </ItemTemplate>
+                    <EmptyContent>
+                        <p>Nothing to show here.</p>
+                        <AsyncButton OnClick="CreateBill" State="creatingBillState" Disabled="disableButtons">
+                            <ButtonText>Create bill</ButtonText>
+                            <LoadingText>Creating bill...</LoadingText>
+                            <ErrorText>Creating bill failed!</ErrorText>
+                        </AsyncButton>
+                    </EmptyContent>
+                </ListView>
                 <h2 class="pad center">Sessions</h2>
                 <AsyncResource State="loadingState">
                     <ResourceContent>
@@ -121,9 +133,11 @@
     AsyncButtonState addingSessionState;
     AsyncButtonState savingSessionState;
     AsyncButtonState deletingSessionState;
+    AsyncButtonState creatingBillState;
     bool disableButtons =>
     savingState.Merge(deletingState).Merge(addingSessionState).Merge(savingSessionState).Merge(deletingSessionState) is
     not AsyncButtonState.Ready || loadingState is not AsyncResourceState.Success;
+    IEnumerable<Bill> Bills => Enumerable.Empty<Bill>().Append(timesheet!.Bill!).Where(b => b is not null);
 
     [Parameter]
     public int id { get; set; }
@@ -188,6 +202,22 @@
         catch
         {
             addingSessionState = AsyncButtonState.Error;
+        }
+    }
+
+    async Task CreateBill()
+    {
+        creatingBillState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.PostAsJsonAsync("api/Bill", new Bill { TimesheetId = timesheet!.Id });
+            creatingBillState = AsyncButtonState.Ready;
+            await OnInitializedAsync();
+        }
+        catch
+        {
+            creatingBillState = AsyncButtonState.Error;
         }
     }
 
