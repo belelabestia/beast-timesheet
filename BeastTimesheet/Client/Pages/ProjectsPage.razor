@@ -22,8 +22,7 @@
                 <ListView Items="projects" Context="project">
                     <ItemTemplate>
                         <NavLink href="@($"projects/{project.Id}")">
-                            @(project.Name is not "" ? project.Name : "Draft - #" +
-                                project.Id)
+                            #@project.Id - @(project.Name is "" ? "Draft" : project.Name)
                         </NavLink>
                     </ItemTemplate>
                     <EmptyContent>

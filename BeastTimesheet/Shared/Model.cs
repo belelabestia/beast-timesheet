@@ -26,10 +26,10 @@ public class Session
 {
     public int Id { get; set; }
     public string Description { get; set; } = "";
-    public DateOnly Date { get; set; }
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly StopTime { get; set; }
-    public TimeSpan BreaksTime { get; set; }
+    public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+    public TimeOnly StartTime { get; set; } = new TimeOnly(9, 0);
+    public TimeOnly StopTime { get; set; } = new TimeOnly(18, 0);
+    public TimeSpan BreaksTime { get; set; } = new TimeSpan(1, 0, 0);
     public int TimesheetId { get; set; }
     public Timesheet? Timesheet { get; set; }
     public TimeSpan GrossTime => StopTime - StartTime;
@@ -42,7 +42,7 @@ public enum BillState { Emitted, Payed, Expired }
 public class Bill
 {
     public int Id { get; set; }
-    public DateOnly ExpirationDate { get; set; }
+    public DateOnly ExpirationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now + TimeSpan.FromDays(30));
     public bool Payed { get; set; }
     public int TimesheetId { get; set; }
     public Timesheet? Timesheet { get; set; }

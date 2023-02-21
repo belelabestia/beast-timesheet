@@ -51,37 +51,39 @@
     </Actions>
     <Links>
         <NavLink href="projects">Projects</NavLink>
-        <NavLink href="@($"projects/{timesheet?.ProjectId}")">@timesheet?.Project?.Name</NavLink>
-    </Links>
-    <Main>
-        <AsyncResource State="loadingState">
-            <ResourceContent>
-                <h2 class="pad center">Timesheet data</h2>
-                <div class="flex column gap">
-                    <label for="name">Name</label>
-                    <input id="name" @bind="timesheet!.Name">
-                    <label for="state">State</label>
-                    <select id="state" @bind="timesheet!.State">
-                        <option value="@TimesheetState.Open">Open</option>
-                        <option value="@TimesheetState.Closed">Closed</option>
-                    </select>
-                </div>
-                <h2 class="pad center">Bill data</h2>
-                <ListView Items="Bills" Context="bill">
-                    <ItemTemplate>
-                        <div class="flex column gap">
-                            <div class="grid gap">
-                                <label>Name</label>
-                                <p>@bill.Name</p>
-                            </div>
-                            <label for="expiration-date">Expiration date</label>
-                            <input id="expiration-date" type="date" @bind="bill.ExpirationDate">
-                            <label for="payed">Payed</label>
-                            <input id="payed" type="checkbox" @bind="bill.Payed">
-                            <div class="grid row gap">
+        <NavLink href="@($"projects/{timesheet?.ProjectId}")">#@timesheet?.Project?.Id - @(timesheet?.Project?.Name is
+            null or "" ? "Draft" :
+            timesheet.Project.Name)</NavLink>
+        </Links>
+        <Main>
+            <AsyncResource State="loadingState">
+                <ResourceContent>
+                    <h2 class="pad center">Timesheet data</h2>
+                    <div class="flex column gap">
+                        <label for="name">Name</label>
+                        <input id="name" @bind="timesheet!.Name">
+                        <label for="state">State</label>
+                        <select id="state" @bind="timesheet!.State">
+                            <option value="@TimesheetState.Open">Open</option>
+                            <option value="@TimesheetState.Closed">Closed</option>
+                        </select>
+                    </div>
+                    <h2 class="pad center">Bill data</h2>
+                    <ListView Items="Bills" Context="bill">
+                        <ItemTemplate>
+                            <div class="flex column gap">
                                 <div class="grid gap">
-                                    <label>Expired</label>
-                                    @if (bill.Expired)
+                                    <label>Name</label>
+                                    <p>@bill.Name</p>
+                                </div>
+                                <label for="expiration-date">Expiration date</label>
+                                <input id="expiration-date" type="date" @bind="bill.ExpirationDate">
+                                <label for="payed">Payed</label>
+                                <input id="payed" type="checkbox" @bind="bill.Payed">
+                                <div class="grid row gap">
+                                    <div class="grid gap">
+                                        <label>Expired</label>
+                                        @if (bill.Expired)
                                     {
                                         <p class="center">&check;</p>
                                     }
@@ -219,6 +221,7 @@
 
         try
         {
+            await http.PutAsJsonAsync($"api/Timesheet/{id}", timesheet, JSON_OPTIONS);
             var res = await http.PostAsJsonAsync("api/Session", new Session { TimesheetId = timesheet!.Id });
             var session = await res.Content.ReadFromJsonAsync<Session>();
             nav.NavigateTo($"sessions/{session!.Id}");
@@ -235,6 +238,7 @@
 
         try
         {
+            await http.PutAsJsonAsync($"api/Timesheet/{id}", timesheet, JSON_OPTIONS);
             await http.PostAsJsonAsync("api/Bill", new Bill { TimesheetId = timesheet!.Id });
             creatingBillState = AsyncButtonState.Ready;
             await OnInitializedAsync();
@@ -251,7 +255,7 @@
 
         try
         {
-            await http.DeleteAsync($"api/Bill/{timesheet!.Id}");
+            await http.DeleteAsync($"api/Bill/{timesheet!.Bill!.Id}");
             deletingBillState = AsyncButtonState.Ready;
             await OnInitializedAsync();
         }
