@@ -11,7 +11,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                #@(id + " - " + (session?.Description is null or "" ? "Draft" : session!.Description))
+                <EntityName Id="@id" Name="@session?.Description" />
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>

@@ -11,7 +11,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                #@(id + " - " + (timesheet?.Name is null or "" ? "Draft" : timesheet!.Name))
+                <EntityName Id="@id" Name="@timesheet?.Name" />
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
@@ -33,59 +33,59 @@
             <LoadingText>Adding session...</LoadingText>
             <ErrorText>Adding session failed!</ErrorText>
         </AsyncButton>
-        @if (timesheet?.Bill is null)
-        {
-            <AsyncButton OnClick="CreateBill" State="creatingBillState" Disabled="disableButtons">
-                <ButtonText>Create bill</ButtonText>
-                <LoadingText>Creating bill...</LoadingText>
-                <ErrorText>Creating bill failed!</ErrorText>
-            </AsyncButton>
-        }
-        else
-        {
-            <AsyncButton OnClick="DeleteBill" State="deletingBillState" Disabled="disableButtons">
-                <ButtonText>Delete bill</ButtonText>
-                <LoadingText>Deleting bill...</LoadingText>
-                <ErrorText>Deleting bill failed!</ErrorText>
-            </AsyncButton>
-        }
+        <NullableView Item="@timesheet?.Bill">
+            <ItemTemplate>
+                <AsyncButton OnClick="DeleteBill" State="deletingBillState" Disabled="disableButtons">
+                    <ButtonText>Delete bill</ButtonText>
+                    <LoadingText>Deleting bill...</LoadingText>
+                    <ErrorText>Deleting bill failed!</ErrorText>
+                </AsyncButton>
+            </ItemTemplate>
+            <EmptyContent>
+                <AsyncButton OnClick="CreateBill" State="creatingBillState" Disabled="disableButtons">
+                    <ButtonText>Create bill</ButtonText>
+                    <LoadingText>Creating bill...</LoadingText>
+                    <ErrorText>Creating bill failed!</ErrorText>
+                </AsyncButton>
+            </EmptyContent>
+        </NullableView>
         <button @onclick="Cancel" disabled="@disableButtons">Cancel</button>
     </Actions>
     <Links>
         <NavLink href="projects">Projects</NavLink>
-        <NavLink href="@($"projects/{timesheet?.ProjectId}")">#@timesheet?.Project?.Id - @(timesheet?.Project?.Name is
-            null or "" ? "Draft" :
-            timesheet.Project.Name)</NavLink>
-        </Links>
-        <Main>
-            <AsyncResource State="loadingState">
-                <ResourceContent>
-                    <h2 class="pad center">Timesheet data</h2>
-                    <div class="flex column gap">
-                        <label for="name">Name</label>
-                        <input id="name" @bind="timesheet!.Name">
-                        <label for="state">State</label>
-                        <select id="state" @bind="timesheet!.State">
-                            <option value="@TimesheetState.Open">Open</option>
-                            <option value="@TimesheetState.Closed">Closed</option>
-                        </select>
-                    </div>
-                    <h2 class="pad center">Bill data</h2>
-                    <ListView Items="Bills" Context="bill">
-                        <ItemTemplate>
-                            <div class="flex column gap">
+        <NavLink href="@($"projects/{timesheet?.ProjectId}")">
+            <EntityName Id="@timesheet!.ProjectId" Name="@timesheet?.Project?.Name" />
+        </NavLink>
+    </Links>
+    <Main>
+        <AsyncResource State="loadingState">
+            <ResourceContent>
+                <h2 class="pad center">Timesheet data</h2>
+                <div class="flex column gap">
+                    <label for="name">Name</label>
+                    <input id="name" @bind="timesheet!.Name">
+                    <label for="state">State</label>
+                    <select id="state" @bind="timesheet!.State">
+                        <option value="@TimesheetState.Open">Open</option>
+                        <option value="@TimesheetState.Closed">Closed</option>
+                    </select>
+                </div>
+                <h2 class="pad center">Bill data</h2>
+                <NullableView Item="@timesheet?.Bill" Context="bill">
+                    <ItemTemplate>
+                        <div class="flex column gap">
+                            <div class="grid gap">
+                                <label>Name</label>
+                                <p>@bill!.Name</p>
+                            </div>
+                            <label for="expiration-date">Expiration date</label>
+                            <input id="expiration-date" type="date" @bind="bill.ExpirationDate">
+                            <label for="payed">Payed</label>
+                            <input id="payed" type="checkbox" @bind="bill.Payed">
+                            <div class="grid row gap">
                                 <div class="grid gap">
-                                    <label>Name</label>
-                                    <p>@bill.Name</p>
-                                </div>
-                                <label for="expiration-date">Expiration date</label>
-                                <input id="expiration-date" type="date" @bind="bill.ExpirationDate">
-                                <label for="payed">Payed</label>
-                                <input id="payed" type="checkbox" @bind="bill.Payed">
-                                <div class="grid row gap">
-                                    <div class="grid gap">
-                                        <label>Expired</label>
-                                        @if (bill.Expired)
+                                    <label>Expired</label>
+                                    @if (bill.Expired)
                                     {
                                         <p class="center">&check;</p>
                                     }
@@ -113,7 +113,8 @@
                             <ErrorText>Creating bill failed!</ErrorText>
                         </AsyncButton>
                     </EmptyContent>
-                </ListView>
+                </NullableView>
+
                 <h2 class="pad center">Sessions</h2>
                 <AsyncResource State="loadingState">
                     <ResourceContent>
@@ -121,7 +122,7 @@
                             <ItemTemplate>
                                 <NavLink href="@($"sessions/{session.Id}")">
                                     @session.Date -
-                                    @(session.Description is not "" ? session.Description : "Draft - #" + session.Id)
+                                    <EntityName Id="session.Id" Name="session.Name" />
                                     (@session.NetTime | @session.SessionFee)
                                 </NavLink>
                             </ItemTemplate>
@@ -161,11 +162,6 @@
     .Merge(creatingBillState)
     .Merge(deletingBillState) is not AsyncButtonState.Ready ||
     loadingState is not AsyncResourceState.Success;
-
-    IEnumerable<Bill> Bills =>
-    Enumerable.Empty<Bill>()
-    .Append(timesheet!.Bill!)
-    .Where(b => b is not null);
 
     [Parameter]
     public int id { get; set; }

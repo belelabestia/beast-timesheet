@@ -11,7 +11,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                #@(id + " - " + (project?.Name is null or "" ? "Draft" : project!.Name))
+                <EntityName Id="@id" Name="@project?.Name" />
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
