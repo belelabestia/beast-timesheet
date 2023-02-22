@@ -1,0 +1,20 @@
+@namespace BeastTimesheet.DesignSystem
+@typeparam TItem
+
+@if (Item is not null)
+{
+    @ItemTemplate
+}
+else
+{
+    @EmptyContent
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public TItem? Item { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment<TItem>? ItemTemplate { get; set; }
+    [Parameter]
+    public RenderFragment? EmptyContent { get; set; }
+}

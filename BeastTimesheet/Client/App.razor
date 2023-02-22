@@ -1,4 +1,5 @@
-﻿@inject Auth auth
+﻿@using BeastTimesheet.DesignSystem
+@inject Auth auth
 
 @if (auth.Key == null)
 {
@@ -8,14 +9,16 @@ else
 {
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            <RouteView RouteData="@routeData" />
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
+            <MainTemplate>
+                <Header>404 - Not found</Header>
+                <Main>
+                    <p role="alert">Sorry, there's nothing at this address.</p>
+                </Main>
+            </MainTemplate>
         </NotFound>
     </Router>
 }

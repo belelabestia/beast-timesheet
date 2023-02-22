@@ -9,8 +9,9 @@
         <div class="grid center fill">
             <div class="grid gap">
                 <p>Insert key</p>
-                <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput" @onkeypress="OnKey">
-                <AsyncButton OnClick="OnConfirm" State="LoginState">
+                <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput" @onkeypress="OnKey"
+                    tabindex="0">
+                <AsyncButton OnClick="OnConfirm" State="loginState">
                     <ButtonText>Confirm</ButtonText>
                     <LoadingText>Logging in...</LoadingText>
                     <ErrorText>Login failed!</ErrorText>
@@ -23,6 +24,7 @@
 @code {
     [Parameter]
     public ElementReference inputReference { get; set; }
+    AsyncButtonState loginState { get; set; }
 
     string? input;
     string? Input
@@ -31,11 +33,9 @@
         set
         {
             input = value;
-            LoginState = AsyncButtonState.Ready;
+            loginState = AsyncButtonState.Ready;
         }
     }
-
-    AsyncButtonState LoginState { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -44,7 +44,7 @@
 
     async Task OnConfirm()
     {
-        LoginState = AsyncButtonState.Loading;
+        loginState = AsyncButtonState.Loading;
 
         http.DefaultRequestHeaders.Remove("Key");
         http.DefaultRequestHeaders.Add("Key", input);
@@ -53,7 +53,7 @@
 
         if (res.StatusCode is not HttpStatusCode.OK)
         {
-            LoginState = AsyncButtonState.Error;
+            loginState = AsyncButtonState.Error;
             return;
         }
 
