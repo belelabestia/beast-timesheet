@@ -9,8 +9,7 @@
         <div class="grid center fill">
             <div class="grid gap">
                 <p>Insert key</p>
-                <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput" @onkeypress="OnKey"
-                    tabindex="0">
+                <input type="password" @ref="inputReference" @bind="Input" @bind:event="oninput" @onkeypress="OnKey">
                 <AsyncButton OnClick="OnConfirm" State="loginState">
                     <ButtonText>Confirm</ButtonText>
                     <LoadingText>Logging in...</LoadingText>
