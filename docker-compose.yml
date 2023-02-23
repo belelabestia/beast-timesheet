@@ -4,9 +4,16 @@ services:
     image: beast-timesheet-app
     ports:
       - "127.0.0.1:5000:80"
+    depends_on:
+      - db
   db:
     image: postgres
     ports:
       - "127.0.0.1:5001:5432"
     environment:
       POSTGRES_PASSWORD: db_password
+    volumes:
+      - bts_db_volume:/var/lib/postgresql/data
+volumes:
+  bts_db_volume:
+    external: true
