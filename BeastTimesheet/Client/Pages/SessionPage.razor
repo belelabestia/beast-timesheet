@@ -32,8 +32,18 @@
     </Actions>
     <Links>
         <NavLink href="projects">Projects</NavLink>
-        <NavLink href="@($"projects/{session?.Timesheet?.ProjectId}")">@session?.Timesheet?.Project?.Name</NavLink>
-        <NavLink href="@($"timesheets/{session?.TimesheetId}")">@session?.Timesheet?.Name</NavLink>
+        <AsyncResource State="loadingState">
+            <ResourceContent>
+                <NavLink href="@($"projects/{session?.Timesheet?.ProjectId}")">
+                    <EntityName Id="@session!.Timesheet!.ProjectId" Name="@session!.Timesheet!.Project!.Name" />
+                </NavLink>
+                <NavLink href="@($"timesheets/{session?.TimesheetId}")">
+                    <EntityName Id="@session!.TimesheetId" Name="@session!.Timesheet!.Name" />
+                </NavLink>
+            </ResourceContent>
+            <LoadingText>...</LoadingText>
+            <ErrorText>Ops!</ErrorText>
+        </AsyncResource>
     </Links>
     <Main>
         <AsyncResource State="loadingState">

@@ -48,7 +48,6 @@ public class Bill
     public Timesheet? Timesheet { get; set; }
     public Project? Project => Timesheet?.Project;
     public bool Expired => DateOnly.FromDateTime(DateTime.Now) > ExpirationDate;
-    public string Name => Project?.Name is null || Timesheet?.Name is null ? "" : $"{Project.Name} - {Timesheet.Name}";
     public TimeSpan TotalTime => Timesheet?.Sessions?.Select(s => s.NetTime).Aggregate(TimeSpan.Zero, (acc, next) => acc + next) ?? TimeSpan.Zero;
     public Decimal TotalFee => Timesheet?.Sessions?.Select(s => s.SessionFee).Sum() ?? decimal.Zero;
 }
