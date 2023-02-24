@@ -11,7 +11,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                <EntityName Id="@id" Name="@session?.Description" />
+                <EntityName Id="@id" Name="@session?.Note" />
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
@@ -51,7 +51,7 @@
                 <h2 class="pad center">Session data</h2>
                 <div class="flex column gap">
                     <label for="description">Description</label>
-                    <input id="description" @bind="session!.Description">
+                    <input id="description" @bind="session!.Note">
                     <label for="date">Date</label>
                     <input id="date" type="date" @bind="session!.Date">
                     <label for="start-time">Start time</label>

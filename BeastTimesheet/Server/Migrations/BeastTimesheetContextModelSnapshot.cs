@@ -85,7 +85,7 @@ namespace BeastTimesheet.Server.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Note")
                         .IsRequired()
                         .HasColumnType("text");
 

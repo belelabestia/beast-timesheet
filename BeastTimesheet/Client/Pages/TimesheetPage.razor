@@ -11,7 +11,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                <EntityName Id="@id" Name="@timesheet?.Name" />
+                <EntityName Id="@id" Name="@timesheet!.Name" />
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
@@ -123,7 +123,7 @@
                             <ItemTemplate>
                                 <NavLink href="@($"sessions/{session.Id}")">
                                     @session.Date -
-                                    <EntityName Id="@session.Id" Name="@session.Description" />
+                                    <EntityName Id="@session.Id" Name="@session.Note" />
                                     (@session.NetTime | @session.SessionFee)
                                 </NavLink>
                             </ItemTemplate>

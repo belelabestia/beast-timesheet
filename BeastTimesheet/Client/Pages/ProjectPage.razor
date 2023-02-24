@@ -52,25 +52,26 @@
                 <ListView Items="project.Timesheets" Context="timesheet">
                     <ItemTemplate>
                         <NavLink href="@($"timesheets/{timesheet.Id}")">#@timesheet.Id - @(timesheet.Name is "" ?
-                            "Draft" : timesheet.Name)</NavLink>
-                        </ItemTemplate>
-                        <EmptyContent>
-                            <p>Nothing to show here.</p>
-                            <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
-                                <ButtonText>Create timesheet</ButtonText>
-                                <LoadingText>Creating timesheet...</LoadingText>
-                                <ErrorText>Creating timesheet failed!</ErrorText>
-                            </AsyncButton>
-                        </EmptyContent>
-                    </ListView>
-                </ResourceContent>
-                <LoadingText>Loading project...</LoadingText>
-                <ErrorText>Loading project failed!</ErrorText>
-            </AsyncResource>
-        </Main>
-    </MainTemplate>
+                            "Draft" : timesheet.Name)
+                        </NavLink>
+                    </ItemTemplate>
+                    <EmptyContent>
+                        <p>Nothing to show here.</p>
+                        <AsyncButton OnClick="CreateTimesheet" State="creatingTimesheetState" Disabled="disableButtons">
+                            <ButtonText>Create timesheet</ButtonText>
+                            <LoadingText>Creating timesheet...</LoadingText>
+                            <ErrorText>Creating timesheet failed!</ErrorText>
+                        </AsyncButton>
+                    </EmptyContent>
+                </ListView>
+            </ResourceContent>
+            <LoadingText>Loading project...</LoadingText>
+            <ErrorText>Loading project failed!</ErrorText>
+        </AsyncResource>
+    </Main>
+</MainTemplate>
 
-    @code {
+@code {
     Project? project;
     AsyncResourceState loadingState;
     AsyncButtonState savingState;

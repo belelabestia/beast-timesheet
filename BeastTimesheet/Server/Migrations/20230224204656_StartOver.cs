@@ -80,11 +80,11 @@ namespace BeastTimesheet.Server.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Description = table.Column<string>(type: "text", nullable: false),
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     StartTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     StopTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     BreaksTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    Note = table.Column<string>(type: "text", nullable: false),
                     TimesheetId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

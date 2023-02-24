@@ -1,0 +1,2 @@
+namespace BeastTimesheet.Client.Model;
+

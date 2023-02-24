@@ -1,10 +1,10 @@
 @namespace BeastTimesheet.DesignSystem
 @typeparam TItem
 
-@if (Items?.Any() ?? false)
+@if (Items!.Any())
 {
     <ul>
-        @foreach (var item in Items)
+        @foreach (var item in Items!)
         {
             <li class="pad">@ItemTemplate?.Invoke(item)</li>
         }

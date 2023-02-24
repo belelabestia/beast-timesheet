@@ -1,10 +1,13 @@
 @namespace BeastTimesheet.DesignSystem
 
-#@Id - @(Name is null or "" ? "Draft" : Name)
+#@Id - @(Name is "" ? "Draft" : Name)
 
 @code {
     [Parameter, EditorRequired]
+
     public int Id { get; set; }
+
     [Parameter, EditorRequired]
-    public string? Name { get; set; }
+
+    public string Name { get; set; } = "";
 }
