@@ -105,7 +105,9 @@ The _bills_ view should be optionally by project or global, so I can just have a
 - [x] in projects page, nameless projects must display #id - Draft
 - [x] in project page, nameless timesheet must display #id - Draft
 - [x] in project page, create timesheet must save project before navigating
-- [ ] in timesheet page, breadcrumb must show Draft on nameless project
-- [ ] in timesheet page, bill date must be init to today
-- [ ] in session page, breadcrumb see above
-- [ ] in session page, date must be init to today
+- [x] in timesheet page, breadcrumb must show Draft on nameless project
+- [x] in timesheet page, bill date must be init to today
+- [x] in session page, breadcrumb see above
+- [x] in session page, date must be init to today
+- [x] session description should be replaced by session note
+- [ ] improve model nullable properties / init all initable
