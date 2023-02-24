@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeastTimesheet.Server.Migrations
 {
     [DbContext(typeof(BeastTimesheetContext))]
-    [Migration("20230224204656_StartOver")]
+    [Migration("20230224213916_StartOver")]
     partial class StartOver
     {
         /// <inheritdoc />
@@ -82,8 +82,8 @@ namespace BeastTimesheet.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeSpan>("BreaksTime")
-                        .HasColumnType("interval");
+                    b.Property<TimeOnly>("BreaksTime")
+                        .HasColumnType("time without time zone");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");

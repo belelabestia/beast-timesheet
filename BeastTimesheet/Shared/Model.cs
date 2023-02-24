@@ -28,12 +28,12 @@ public class Session
     public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     public TimeOnly StartTime { get; set; } = new TimeOnly(9, 0);
     public TimeOnly StopTime { get; set; } = new TimeOnly(18, 0);
-    public TimeSpan BreaksTime { get; set; } = new TimeSpan(1, 0, 0);
+    public TimeOnly BreaksTime { get; set; } = new TimeOnly(1, 0);
     public string Note { get; set; } = "";
     public int TimesheetId { get; set; }
     public Timesheet? Timesheet { get; set; }
     public TimeSpan GrossTime => StopTime - StartTime;
-    public TimeSpan NetTime => GrossTime - BreaksTime;
+    public TimeSpan NetTime => GrossTime - BreaksTime.ToTimeSpan();
     public Decimal SessionFee => Convert.ToDecimal(NetTime.TotalHours) * Timesheet?.Project?.HourlyFee ?? 0;
 }
 

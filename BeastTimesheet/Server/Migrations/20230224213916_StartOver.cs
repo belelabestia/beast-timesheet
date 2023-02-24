@@ -83,7 +83,7 @@ namespace BeastTimesheet.Server.Migrations
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     StartTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     StopTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
-                    BreaksTime = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    BreaksTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
                     Note = table.Column<string>(type: "text", nullable: false),
                     TimesheetId = table.Column<int>(type: "integer", nullable: false)
                 },

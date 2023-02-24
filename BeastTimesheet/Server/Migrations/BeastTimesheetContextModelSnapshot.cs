@@ -79,8 +79,8 @@ namespace BeastTimesheet.Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<TimeSpan>("BreaksTime")
-                        .HasColumnType("interval");
+                    b.Property<TimeOnly>("BreaksTime")
+                        .HasColumnType("time without time zone");
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
