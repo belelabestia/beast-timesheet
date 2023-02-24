@@ -100,6 +100,14 @@ All entities can also be archived (soft remove) or deleted (hard remove).
 
 The _bills_ view should be optionally by project or global, so I can just have a fast report of all my bills.
 
+## Repo scripts
+
+The root of this repo acts like a little console. I'm intentionally keeping the sripts in the root for extra-practical purposes.
+
+If working on other than Windows, please install [the cross-platform PowerShell](https://github.com/PowerShell/PowerShell).
+
+Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch small sequences of commands (some may contain just one command!) and are useful both for use and consultation.
+
 ## Known issues
 
 - [x] in projects page, nameless projects must display #id - Draft
