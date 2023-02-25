@@ -15,7 +15,7 @@ echo 'exporting project image'
 docker save beast-timesheet-app -o ./bts-belelabestia-it/beast-timesheet.image.tar
 echo 'image exported'
 
-echo 'pushing image (password requested)'
+echo 'pushing image (requires password)'
 scp -rC ./bts-belelabestia-it root@belelabestia.it:./apps
 echo 'image pushed on remote server'
 
