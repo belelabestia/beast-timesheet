@@ -118,4 +118,3 @@ Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch s
 - [x] in session page, breadcrumb see above
 - [x] in session page, date must be init to today
 - [x] session description should be replaced by session note
-- [ ] improve model nullable properties / init all initable
