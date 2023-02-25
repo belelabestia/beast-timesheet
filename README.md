@@ -108,6 +108,10 @@ If working on other than Windows, please install [the cross-platform PowerShell]
 
 Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch small sequences of commands (some may contain just one command!) and are useful both for use and consultation.
 
-## Tasks
+## Usage notes
 
-- [x] Make a _repeat_ functionality for _session_ that copies for next day
+- [ ] inputs are too little/unreadable
+- [ ] currency units should be shown
+- [ ] textarea should not be resizable
+- [ ] gross time and net time should not show seconds
+- [ ] currency values should be displayed with two decimal places
