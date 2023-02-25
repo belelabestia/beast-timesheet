@@ -1,6 +1,6 @@
 namespace BeastTimesheet.Shared.Model;
 
-public class Project
+public record Project
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
@@ -11,7 +11,7 @@ public class Project
 
 public enum TimesheetState { Open, Closed }
 
-public class Timesheet
+public record Timesheet
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
@@ -22,7 +22,7 @@ public class Timesheet
     public IEnumerable<Session>? Sessions { get; set; }
 }
 
-public class Session
+public record Session
 {
     public int Id { get; set; }
     public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
@@ -39,7 +39,7 @@ public class Session
 
 public enum BillState { Emitted, Payed, Expired }
 
-public class Bill
+public record Bill
 {
     public int Id { get; set; }
     public DateOnly ExpirationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now + TimeSpan.FromDays(30));
