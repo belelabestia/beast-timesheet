@@ -23,6 +23,11 @@
             <LoadingText>Saving...</LoadingText>
             <ErrorText>Saving failed!</ErrorText>
         </AsyncButton>
+        <AsyncButton OnClick="Repeat" State="repeatingState" Disabled="disableButtons">
+            <ButtonText>Repeat</ButtonText>
+            <LoadingText>Repeating...</LoadingText>
+            <ErrorText>Repeating failed!</ErrorText>
+        </AsyncButton>
         <AsyncButton OnClick="Delete" State="deletingState" Disabled="disableButtons">
             <ButtonText>Delete</ButtonText>
             <LoadingText>Deleting...</LoadingText>
@@ -86,9 +91,10 @@
     Session? session;
     AsyncResourceState loadingState;
     AsyncButtonState savingState;
+    AsyncButtonState repeatingState;
     AsyncButtonState deletingState;
     bool disableButtons =>
-    savingState.Merge(deletingState).Merge(deletingState) is not AsyncButtonState.Ready
+    savingState.Merge(deletingState).Merge(repeatingState).Merge(deletingState) is not AsyncButtonState.Ready
     || loadingState is not AsyncResourceState.Success;
 
     [Parameter]
@@ -116,13 +122,39 @@
         try
         {
             await http.PutAsJsonAsync($"api/Session/{id}", session, JSON_OPTIONS);
+            Back();
         }
         catch
         {
             savingState = AsyncButtonState.Error;
         }
 
-        Back();
+    }
+
+    async Task Repeat()
+    {
+        repeatingState = AsyncButtonState.Loading;
+
+        try
+        {
+            await http.PutAsJsonAsync($"api/Session/{id}", session, JSON_OPTIONS);
+
+            var res = await http.PostAsJsonAsync("api/Session/", session! with
+                {
+                    Id = 0,
+                    Date = session.Date.AddDays(1),
+                    Timesheet = null
+                },
+            JSON_OPTIONS);
+
+            var repeated = await res.Content.ReadFromJsonAsync<Session>();
+            nav.NavigateTo($"sessions/{repeated!.Id}");
+        }
+        catch
+        {
+            repeatingState = AsyncButtonState.Error;
+            throw;
+        }
     }
 
     async Task Delete()
@@ -132,13 +164,12 @@
         try
         {
             await http.DeleteAsync($"api/Session/{id}");
+            Back();
         }
         catch
         {
             deletingState = AsyncButtonState.Error;
         }
-
-        Back();
     }
 
     void Cancel()

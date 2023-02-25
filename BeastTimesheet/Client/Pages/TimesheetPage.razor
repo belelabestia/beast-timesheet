@@ -189,13 +189,12 @@
         try
         {
             await http.PutAsJsonAsync($"api/Timesheet/{id}", timesheet, JSON_OPTIONS);
+            Back();
         }
         catch
         {
             savingState = AsyncButtonState.Error;
         }
-
-        Back();
     }
 
     async Task Delete()
@@ -205,13 +204,12 @@
         try
         {
             await http.DeleteAsync($"api/Timesheet/{id}");
+            Back();
         }
         catch
         {
             deletingState = AsyncButtonState.Error;
         }
-
-        Back();
     }
 
     async Task AddSession()

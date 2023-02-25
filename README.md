@@ -108,13 +108,6 @@ If working on other than Windows, please install [the cross-platform PowerShell]
 
 Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch small sequences of commands (some may contain just one command!) and are useful both for use and consultation.
 
-## Known issues
+## Tasks
 
-- [x] in projects page, nameless projects must display #id - Draft
-- [x] in project page, nameless timesheet must display #id - Draft
-- [x] in project page, create timesheet must save project before navigating
-- [x] in timesheet page, breadcrumb must show Draft on nameless project
-- [x] in timesheet page, bill date must be init to today
-- [x] in session page, breadcrumb see above
-- [x] in session page, date must be init to today
-- [x] session description should be replaced by session note
+- [x] Make a _repeat_ functionality for _session_ that copies for next day
