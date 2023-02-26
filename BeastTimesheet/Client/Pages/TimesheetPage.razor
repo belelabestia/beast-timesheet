@@ -122,9 +122,11 @@
                         <ListView Items="timesheet?.Sessions" Context="session">
                             <ItemTemplate>
                                 <NavLink href="@($"sessions/{session.Id}")">
-                                    @session.Date -
-                                    <EntityName Id="@session.Id" Name="@session.Note" />
-                                    (@session.NetTime | @session.SessionFee)
+                                    <p>@session.Date - @session.NetTime - @session.SessionFee €</p>
+                                    <p>
+                                        <EntityName Id="@session.Id"
+                                            Name="@(session.Note.Split(Environment.NewLine).FirstOrDefault() ?? "")" />
+                                    </p>
                                 </NavLink>
                             </ItemTemplate>
                             <EmptyContent>

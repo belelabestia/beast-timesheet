@@ -8,6 +8,7 @@
 html,
 body {
   height: 100%;
+  font-size: 1.06rem;
 }
 
 body {
@@ -50,6 +51,25 @@ button {
   text-transform: uppercase;
   text-decoration: underline;
   cursor: pointer;
+}
+
+input, textarea, select {
+  outline: none;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: large;
+  max-width: 100%;
+  min-width: 100%;
+}
+
+textarea {
+  min-height: 150px;
+}
+
+:is(input, select):focus {
+  border: 2px solid black;
+  padding: 7px;
 }
 
 .full {
@@ -158,6 +178,6 @@ a {
 .page {
   height: 100%;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
 }

@@ -110,8 +110,9 @@ Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch s
 
 ## Plan for v0.2.0
 
-- [ ] inputs are too little/unreadable
+- [x] inputs are too little/unreadable
 - [ ] currency units should be shown
-- [ ] textarea should not be resizable
+- [x] textarea should not be resizable
 - [ ] gross time and net time should not show seconds
 - [ ] currency values should be displayed with two decimal places
+- [x] in timesheet page sessions should be displayed on 2 lines
