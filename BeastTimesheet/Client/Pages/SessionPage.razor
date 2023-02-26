@@ -64,7 +64,9 @@
                     <label for="breaks-time">Breaks time</label>
                     <input id="breaks-time" type="time" @bind="session.BreaksTime">
                     <label for="description">Note</label>
-                    <textarea id="description" @bind="session.Note"></textarea>
+                    <div class="textarea-container">
+                        <textarea id="description" @bind="session.Note"></textarea>
+                    </div>
                     <div class="grid row gap">
                         <div class="grid gap">
                             <label>Gross time</label>
