@@ -108,7 +108,7 @@ If working on other than Windows, please install [the cross-platform PowerShell]
 
 Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch small sequences of commands (some may contain just one command!) and are useful both for use and consultation.
 
-## Usage notes
+## Plan for v0.2.0
 
 - [ ] inputs are too little/unreadable
 - [ ] currency units should be shown
