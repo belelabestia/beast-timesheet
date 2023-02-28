@@ -124,7 +124,7 @@
                                 <NavLink href="@($"sessions/{session.Id}")">
                                     <p>@session.Date -
                                         <TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" /> -
-                                        @session.SessionFee €
+                                        @String.Format("{0:.00}", session.SessionFee) €
                                     </p>
                                     <p>
                                         <EntityName Id="@session.Id"
