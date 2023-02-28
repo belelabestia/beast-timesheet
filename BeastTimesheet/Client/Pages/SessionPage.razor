@@ -11,7 +11,7 @@
     <Header>
         <AsyncResource State="loadingState">
             <ResourceContent>
-                <EntityName Id="@id" Name="@session?.Note" />
+                <EntityName Id="@id" Name="@(session?.Note.Split(Environment.NewLine).FirstOrDefault() ?? "")" />
             </ResourceContent>
             <LoadingText>...</LoadingText>
             <ErrorText>Ops!</ErrorText>
@@ -51,7 +51,7 @@
         </AsyncResource>
     </Links>
     <Main>
-        <AsyncResource State="loadingState">
+        <AsyncResource State="loadingState" IsPage>
             <ResourceContent>
                 <h2 class="pad center">Session data</h2>
                 <div class="flex column gap">
