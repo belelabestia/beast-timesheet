@@ -123,7 +123,8 @@
                             <ItemTemplate>
                                 <NavLink href="@($"sessions/{session.Id}")">
                                     <p>@session.Date -
-                                        <TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" /> -
+                                        @session.StartTime - @session.StopTime
+                                        (<TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" />) -
                                         @String.Format("{0:.00}", session.SessionFee) €
                                     </p>
                                     <p>
