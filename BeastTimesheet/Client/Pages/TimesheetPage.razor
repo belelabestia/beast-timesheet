@@ -122,7 +122,8 @@
                         <ListView Items="timesheet?.Sessions" Context="session">
                             <ItemTemplate>
                                 <NavLink href="@($"sessions/{session.Id}")">
-                                    <p>@session.Date -
+                                    <p>@session.Date</p>
+                                    <p>
                                         @session.StartTime - @session.StopTime
                                         (<TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" />) -
                                         @String.Format("{0:.00}", session.SessionFee) €
