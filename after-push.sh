@@ -15,6 +15,7 @@ docker system prune -f
 echo 'system clean'
 
 echo 'reloading caddy'
+cd
 caddy reload
 echo 'caddy reloaded'
 
