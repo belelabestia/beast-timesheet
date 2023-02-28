@@ -84,10 +84,9 @@ input[type="checkbox"]::after {
   left: 0;
   right: 0;
   display: flex;
-  content: ' ';
+  content: '✗';
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
   border-radius: 4px;
 }
 
