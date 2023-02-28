@@ -70,15 +70,15 @@
                     <div class="grid row gap">
                         <div class="grid gap">
                             <label>Gross time</label>
-                            <p>@session.GrossTime</p>
+                            <TimeView Time="@TimeOnly.FromTimeSpan(session.GrossTime)" />
                         </div>
                         <div class="grid gap">
                             <label>Net time</label>
-                            <p>@session.NetTime</p>
+                            <TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" />
                         </div>
                         <div class="grid gap">
                             <label>Session fee</label>
-                            <p>@session.SessionFee</p>
+                            <p>@session.SessionFee €</p>
                         </div>
                     </div>
                 </div>
@@ -150,6 +150,7 @@
             JSON_OPTIONS);
 
             var repeated = await res.Content.ReadFromJsonAsync<Session>();
+            repeatingState = AsyncButtonState.Ready;
             nav.NavigateTo($"sessions/{repeated!.Id}");
         }
         catch

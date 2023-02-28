@@ -1,0 +1,8 @@
+@namespace BeastTimesheet.DesignSystem
+
+@Time.Hour h @(Time.Minute is 0 ? "" : Time.Minute + " m")
+
+@code {
+  [Parameter, EditorRequired]
+  public TimeOnly Time { get; set; }
+}

@@ -45,8 +45,8 @@
                 <div class="flex column gap">
                     <label for="name">Name</label>
                     <input id="name" @bind="project!.Name">
-                    <label for="hourly-fee">Hourly fee</label>
-                    <input id="hourly-fee" @bind="project.HourlyFee">
+                    <label for="hourly-fee">Hourly fee (€)</label>
+                    <input type="number" id="hourly-fee" @bind="project.HourlyFee">
                 </div>
                 <h2 class="center pad">Timesheets</h2>
                 <ListView Items="project.Timesheets" Context="timesheet">
