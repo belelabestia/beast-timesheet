@@ -2,7 +2,7 @@
 
 @if (State is AsyncResourceState.Loading && LoadingText is not null)
 {
-    <div class="fill grid center">
+    <div class="@(IsPage ? "fill grid center" : "")">
         <p>@LoadingText</p>
     </div>
 }
@@ -12,7 +12,7 @@ else if (State is AsyncResourceState.Success)
 }
 else if (State is AsyncResourceState.Error && ErrorText is not null)
 {
-    <div class="fill grid center">
+    <div class="@(IsPage ? "fill grid center" : "")">
         <p class="error">@ErrorText</p>
     </div>
 }
@@ -20,6 +20,8 @@ else if (State is AsyncResourceState.Error && ErrorText is not null)
 @code {
     [Parameter]
     public AsyncResourceState State { get; set; }
+    [Parameter]
+    public bool IsPage { get; set; }
     [Parameter, EditorRequired]
     public RenderFragment? ResourceContent { get; set; }
     [Parameter]

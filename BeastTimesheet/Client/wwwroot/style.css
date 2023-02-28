@@ -59,7 +59,9 @@ button {
   cursor: pointer;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   outline: none;
   border: 1px solid black;
   border-radius: 4px;
@@ -229,7 +231,7 @@ a {
 }
 
 .page > :last-child {
-  margin-bottom: 30vh;
+  margin-bottom: 25vh;
 }
 
 @media screen and (max-width: 500px) {
