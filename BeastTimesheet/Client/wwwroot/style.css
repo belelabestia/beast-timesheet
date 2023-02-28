@@ -53,7 +53,9 @@ button {
   cursor: pointer;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   outline: none;
   border: 1px solid black;
   border-radius: 4px;
@@ -180,4 +182,8 @@ a {
   width: 100%;
   max-width: 500px;
   margin: auto;
+}
+
+.page > :last-child {
+  margin-bottom: 25vh;
 }
