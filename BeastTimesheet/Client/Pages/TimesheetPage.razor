@@ -98,11 +98,11 @@
                                 </div>
                                 <div class="grid gap">
                                     <label>Total time</label>
-                                    <p>@bill.TotalTime</p>
+                                    <p>@((int)bill.TotalTime.TotalHours) h @bill.TotalTime.Minutes m</p>
                                 </div>
                                 <div class="grid gap">
                                     <label>Total fee</label>
-                                    <p>@bill.TotalFee</p>
+                                    <p>@(bill.TotalFee is 0 ? "0.00" : string.Format("{0:.00}", bill.TotalFee)) €</p>
                                 </div>
                             </div>
                         </div>
