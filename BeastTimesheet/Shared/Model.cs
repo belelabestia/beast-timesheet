@@ -34,7 +34,7 @@ public record Session
     public Timesheet? Timesheet { get; set; }
     public TimeSpan GrossTime => StopTime - StartTime;
     public TimeSpan NetTime => GrossTime - BreaksTime.ToTimeSpan();
-    public Decimal SessionFee => Convert.ToDecimal(NetTime.TotalHours) * Timesheet?.Project?.HourlyFee ?? 0;
+    public decimal SessionFee => Convert.ToDecimal(NetTime.TotalHours) * Timesheet?.Project?.HourlyFee ?? 0;
 }
 
 public enum BillState { Emitted, Payed, Expired }
@@ -49,5 +49,5 @@ public record Bill
     public Project? Project => Timesheet?.Project;
     public bool Expired => DateOnly.FromDateTime(DateTime.Now) > ExpirationDate;
     public TimeSpan TotalTime => Timesheet?.Sessions?.Select(s => s.NetTime).Aggregate(TimeSpan.Zero, (acc, next) => acc + next) ?? TimeSpan.Zero;
-    public Decimal TotalFee => Timesheet?.Sessions?.Select(s => s.SessionFee).Sum() ?? decimal.Zero;
+    public decimal TotalFee => Timesheet?.Sessions?.Select(s => s.SessionFee).Sum() ?? decimal.Zero;
 }

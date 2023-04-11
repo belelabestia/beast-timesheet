@@ -5,11 +5,11 @@ namespace BeastTimesheet.Shared;
 
 public static class Config
 {
-    public static JsonSerializerOptions JSON_OPTIONS => new JsonSerializerOptions
+    public static JsonSerializerOptions JSON_OPTIONS => new()
     {
         ReferenceHandler = ReferenceHandler.Preserve,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public const string VERSION = "0.2.3";
+    public const string VERSION = "0.2.4";
 }

@@ -18,7 +18,11 @@ public class TimesheetController : ControllerBase
     [HttpGet("{id:int}")]
     public Timesheet? GetTimesheet(int id)
     {
-        return _context.Timesheets!.Include(t => t.Sessions).Include(t => t.Project).Include(t => t.Bill).SingleOrDefault(t => t.Id == id);
+        return _context.Timesheets!
+            .Include(t => t.Sessions!.OrderBy(s => s.Date))
+            .Include(t => t.Project)
+            .Include(t => t.Bill)
+            .SingleOrDefault(t => t.Id == id);
     }
 
     [HttpPost]
