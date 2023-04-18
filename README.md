@@ -108,11 +108,6 @@ If working on other than Windows, please install [the cross-platform PowerShell]
 
 Run `./ls.ps1` to quickly show all the `ps1` scripts available; they all batch small sequences of commands (some may contain just one command!) and are useful both for use and consultation.
 
-## Plan for v0.2.0
+## Move sessions from one timesheet to another
 
-- [x] inputs are too little/unreadable
-- [ ] currency units should be shown
-- [x] textarea should not be resizable
-- [ ] gross time and net time should not show seconds
-- [ ] currency values should be displayed with two decimal places
-- [x] in timesheet page sessions should be displayed on 2 lines
+I'll show an overlay with the possible destination timesheets and a _cancel_ button.

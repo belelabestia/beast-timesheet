@@ -7,6 +7,10 @@
 
 <PageTitle>Timesheet</PageTitle>
 
+<Overlay Show="@showTimesheets">
+    <p>stocazzo</p>
+</Overlay>
+
 <MainTemplate>
     <Header>
         <AsyncResource State="loadingState">
@@ -117,22 +121,51 @@
                     </EmptyContent>
                 </NullableView>
                 <h2 class="pad center">Sessions</h2>
+                <div class="flex end divide">
+                    @if (selectionEnabled)
+                    {
+                        <button @onclick="DisableSelection">Close</button>
+                        <button @onclick="selectedSessions.Clear">Clear</button>
+                    }
+                    else
+                    {
+                        <button @onclick="EnableSelection">Select</button>
+                    }
+                </div>
+                @if (selectionEnabled && selectedSessions.Any())
+                {
+                    <div class="flex end divide">
+                        <button @onclick="MoveSelectedSessions">Move</button>
+                    </div>
+                }
                 <AsyncResource State="loadingState">
                     <ResourceContent>
                         <ListView Items="timesheet?.Sessions" Context="session">
                             <ItemTemplate>
-                                <NavLink href="@($"sessions/{session.Id}")">
-                                    <p>@session.Date</p>
-                                    <p>
-                                        @session.StartTime - @session.StopTime
-                                        (<TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" />) -
-                                        @String.Format("{0:.00}", session.SessionFee) €
-                                    </p>
-                                    <p>
-                                        <EntityName Id="@session.Id"
-                                            Name="@(session.Note.Split(Environment.NewLine).FirstOrDefault() ?? "")" />
-                                    </p>
-                                </NavLink>
+                                <div class="flex gap">
+                                    @if (selectionEnabled)
+                                    {
+                                        <div class="grid center" style="width: 35px">
+                                            <input type="checkbox" @bind:get="selectedSessions.Contains(session)"
+                                            @bind:set="OnSelectionChange(session)">
+                                        </div>
+                                    }
+                                    <NavLink href="@($"sessions/{session.Id}")">
+                                        <div>
+                                            <p>@session.Date</p>
+                                            <p>
+                                                @session.StartTime - @session.StopTime
+                                                (
+                                                <TimeView Time="@TimeOnly.FromTimeSpan(session.NetTime)" />) -
+                                                @String.Format("{0:.00}", session.SessionFee) €
+                                            </p>
+                                            <p>
+                                                <EntityName Id="@session.Id"
+                                                    Name="@(session.Note.Split(Environment.NewLine).FirstOrDefault() ?? "")" />
+                                            </p>
+                                        </div>
+                                    </NavLink>
+                                </div>
                             </ItemTemplate>
                             <EmptyContent>
                                 <p>Nothing to show here.</p>
@@ -162,6 +195,9 @@
     AsyncButtonState addingSessionState;
     AsyncButtonState creatingBillState;
     AsyncButtonState deletingBillState;
+    bool selectionEnabled;
+    bool showTimesheets;
+    List<Session> selectedSessions = new();
 
     bool disableButtons =>
     savingState
@@ -187,6 +223,28 @@
         {
             loadingState = AsyncResourceState.Error;
         }
+    }
+
+    void EnableSelection() => selectionEnabled = true;
+
+    void DisableSelection()
+    {
+        selectionEnabled = false;
+        selectedSessions.Clear();
+    }
+
+    Action<bool> OnSelectionChange(Session session)
+    {
+        return (e) =>
+        {
+            if (e is true) selectedSessions.Add(session);
+            else selectedSessions.Remove(session);
+        };
+    }
+
+    void MoveSelectedSessions()
+    {
+        showTimesheets = true;
     }
 
     async Task Save()

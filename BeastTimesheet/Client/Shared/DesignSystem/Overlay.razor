@@ -1,0 +1,14 @@
+@namespace BeastTimesheet.DesignSystem
+
+@if (Show)
+{
+    <div class="overlay blur grid center">@ChildContent</div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public bool Show { get; set; }
+
+    [Parameter, EditorRequired]
+    public RenderFragment? ChildContent { get; set; }
+}

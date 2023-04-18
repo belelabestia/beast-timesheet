@@ -15,12 +15,25 @@ body {
   font-family: "Ubuntu", sans-serif;
 }
 
+header,
+footer {
+  position: sticky;
+  z-index: 1;
+}
+
 header {
   border-bottom: 1px solid black;
   top: 0;
 }
 
-header *, h1, h2 {
+footer {
+  border-top: 1px solid black;
+  bottom: 0;
+}
+
+header *,
+h1,
+h2 {
   white-space: nowrap;
 }
 
@@ -34,18 +47,6 @@ header *, h1, h2 {
   border-top: 1px solid black;
   padding-top: 8px;
   margin-top: 8px;
-}
-
-footer {
-  border-top: 1px solid black;
-  bottom: 0;
-}
-
-header, footer {
-  position: sticky;
-  background-color: hsla(0, 0%, 100%, 0.75);
-  backdrop-filter: blur(4px);
-  z-index: 1;
 }
 
 button {
@@ -232,6 +233,21 @@ a {
 
 .page > :last-child {
   margin-bottom: 25vh;
+}
+
+.blur {
+  background-color: hsla(0, 0%, 100%, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background-color: hsla(0, 0%, 100%, 0.75);
 }
 
 @media screen and (max-width: 500px) {

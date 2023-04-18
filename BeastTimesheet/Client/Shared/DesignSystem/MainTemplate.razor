@@ -3,7 +3,7 @@
 @inject HttpClient http
 @inject Auth auth
 
-<header class="grid gap">
+<header class="grid gap blur">
     <h1 class="pad center">@Header</h1>
     <nav class="pad grid gap scroll">
         <div class="flex end divide">@Actions</div>
@@ -15,7 +15,7 @@
         @Main
     </div>
 </main>
-<footer class="pad flex end gap">
+<footer class="pad flex end gap blur">
     <span>version @version</span>
     @if (auth.Key is not null)
     {
