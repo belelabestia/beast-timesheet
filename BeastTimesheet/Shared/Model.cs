@@ -4,7 +4,7 @@ public record Project
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
-    public Decimal HourlyFee { get; set; }
+    public decimal HourlyFee { get; set; }
     public IEnumerable<Timesheet>? Timesheets { get; set; }
     public IEnumerable<Bill>? Bills { get; set; }
 }
