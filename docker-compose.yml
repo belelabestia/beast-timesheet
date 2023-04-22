@@ -3,13 +3,13 @@ services:
     build: ./BeastTimesheet/
     image: beast-timesheet-app
     ports:
-      - "127.0.0.1:5000:80"
+      - "5000:80"
     depends_on:
       - db
   db:
     image: postgres
     ports:
-      - "127.0.0.1:5001:5432"
+      - "5001:5432"
     environment:
       POSTGRES_PASSWORD: db_password
     volumes:
