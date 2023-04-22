@@ -11,5 +11,5 @@ public static class Config
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public const string VERSION = "0.2.4";
+    public const string VERSION = "0.3.0";
 }
