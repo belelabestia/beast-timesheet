@@ -8,7 +8,41 @@
 <PageTitle>Timesheet</PageTitle>
 
 <Overlay Show="@showTimesheets">
-    <p>stocazzo</p>
+    <AsyncResource State="loadingProjectState" IsPage="false">
+        <ResourceContent>
+            <div class="flex column gap">
+                @if (projectTimesheets!.Any())
+                {
+                    <div class="flex end divide">
+                        <button @onclick="CloseTimesheetSelection">Cancel</button>
+                    </div>
+                }
+                <ListView Items="projectTimesheets" Context="projectTimesheet">
+                    <ItemTemplate>
+                        <div class="flex gap">
+                            <AsyncButton OnClick="MoveToTimesheet(projectTimesheet)" State="movingSessionsState"
+                                Disabled="disableButtons">
+                                <ButtonText>Move</ButtonText>
+                                <LoadingText>Moving...</LoadingText>
+                                <ErrorText>Moving failed!</ErrorText>
+                            </AsyncButton>
+                            <span href="@($"timesheets/{projectTimesheet.Id}")">#@projectTimesheet.Id -
+                                @(projectTimesheet.Name
+                                    is
+                                    "" ?
+                                    "Draft" : projectTimesheet.Name)
+                            </span>
+                        </div>
+                    </ItemTemplate>
+                    <EmptyContent>
+                        <p>Nothing to show here.</p>
+                        <button @onclick="CloseTimesheetSelection">Close</button>
+                    </EmptyContent>
+                </ListView>
+            </div>
+        </ResourceContent>
+        <LoadingText>Loading project timesheets...</LoadingText>
+    </AsyncResource>
 </Overlay>
 
 <MainTemplate>
@@ -124,18 +158,18 @@
                 <div class="flex end divide">
                     @if (selectionEnabled)
                     {
-                        <button @onclick="DisableSelection">Close</button>
-                        <button @onclick="selectedSessions.Clear">Clear</button>
+                        <button @onclick="DisableSelection">Close selection</button>
                     }
                     else
                     {
                         <button @onclick="EnableSelection">Select</button>
                     }
                 </div>
-                @if (selectionEnabled && selectedSessions.Any())
+                @if (selectionEnabled && selectedSessions is not null && selectedSessions.Any())
                 {
                     <div class="flex end divide">
                         <button @onclick="MoveSelectedSessions">Move</button>
+                        <button @onclick="selectedSessions.Clear">Clear</button>
                     </div>
                 }
                 <AsyncResource State="loadingState">
@@ -189,12 +223,15 @@
 
 @code {
     Timesheet? timesheet;
+    IEnumerable<Timesheet>? projectTimesheets;
     AsyncResourceState loadingState;
+    AsyncResourceState loadingProjectState;
     AsyncButtonState savingState;
     AsyncButtonState deletingState;
     AsyncButtonState addingSessionState;
     AsyncButtonState creatingBillState;
     AsyncButtonState deletingBillState;
+    AsyncButtonState movingSessionsState;
     bool selectionEnabled;
     bool showTimesheets;
     List<Session> selectedSessions = new();
@@ -204,8 +241,9 @@
     .Merge(deletingState)
     .Merge(addingSessionState)
     .Merge(creatingBillState)
-    .Merge(deletingBillState) is not AsyncButtonState.Ready ||
-    loadingState is not AsyncResourceState.Success;
+    .Merge(deletingBillState)
+    .Merge(movingSessionsState) is not AsyncButtonState.Ready
+    || loadingState is not AsyncResourceState.Success;
 
     [Parameter]
     public int id { get; set; }
@@ -242,9 +280,57 @@
         };
     }
 
-    void MoveSelectedSessions()
+    async Task MoveSelectedSessions()
     {
         showTimesheets = true;
+        await GetProjectTimesheets();
+    }
+
+    async Task GetProjectTimesheets()
+    {
+        try
+        {
+            var project = await http.GetFromJsonAsync<Project>($"api/Project/{timesheet!.ProjectId}", JSON_OPTIONS);
+            projectTimesheets = project!.Timesheets!.Where(ts => ts.Id != timesheet!.Id);
+            loadingProjectState = AsyncResourceState.Success;
+        }
+        catch
+        {
+            loadingProjectState = AsyncResourceState.Error;
+        }
+    }
+
+    void CloseTimesheetSelection()
+    {
+        showTimesheets = false;
+    }
+
+    Func<Task> MoveToTimesheet(Timesheet timesheet)
+    {
+        return async () =>
+        {
+            movingSessionsState = AsyncButtonState.Loading;
+
+            try
+            {
+                foreach (var session in selectedSessions)
+                {
+                    session.Timesheet = null;
+                    session.TimesheetId = timesheet.Id;
+                    await http.PutAsJsonAsync($"api/Session/{id}", session, JSON_OPTIONS);
+                }
+
+                selectedSessions.Clear();
+                movingSessionsState = AsyncButtonState.Ready;
+
+                await OnInitializedAsync();
+                CloseTimesheetSelection();
+            }
+            catch
+            {
+                movingSessionsState = AsyncButtonState.Error;
+            }
+        };
     }
 
     async Task Save()
